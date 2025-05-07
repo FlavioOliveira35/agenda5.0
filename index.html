@@ -1,0 +1,2427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Diária 4.0 - Planejamento Profissional</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/_@fortawesome/fontawesome-free@6.2.1/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Estilos gerais do aplicativo */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Estilos para o container principal */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            min-height: 100vh;
+        }
+
+        /* Estilos para login e registro */
+        .login-container {
+            display: flex;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+        }
+
+        .login-form-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 400px;
+            padding: 2rem;
+            margin: auto;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-form h1 {
+            color: #6c3483;
+            font-weight: 600;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: #8e44ad;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1);
+        }
+
+        .form-button {
+            width: 100%;
+            padding: 12px;
+            background: #8e44ad;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .form-button:hover {
+            background: #7d3c98;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .form-link {
+            color: #8e44ad;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .form-link:hover {
+            color: #6c3483;
+            text-decoration: underline;
+        }
+
+        /* Estilos para o cabeçalho principal */
+        .header {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+            text-align: center;
+        }
+
+        .date-selector {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            font-size: 1.2rem;
+            background-color: #a06bc3;
+            border-radius: 5px;
+        }
+
+        .date-nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .date-nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Estilos para as abas */
+        .tabs {
+            display: flex;
+            background-color: #fafafa;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #777;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: #8e44ad;
+        }
+
+        .tab.active {
+            color: #8e44ad;
+            border-bottom-color: #8e44ad;
+        }
+
+        /* Estilos para conteúdo da agenda */
+        .content-container {
+            padding: 1.5rem;
+        }
+
+        /* Estilos para tarefas */
+        .task-list {
+            margin-top: 1rem;
+        }
+
+        .task-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            align-items: center;
+        }
+
+        .task-time {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .task-time i {
+            margin-right: 0.5rem;
+            color: #8e44ad;
+        }
+
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .task-description {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .task-priority-critical {
+            background-color: #ffecec;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .task-priority-attention {
+            background-color: #fff9ec;
+            border-left: 4px solid #f39c12;
+        }
+
+        .task-priority-normal {
+            background-color: #ecffec;
+            border-left: 4px solid #2ecc71;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+
+        .task-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .task-btn i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-start {
+            background-color: #8e44ad;
+            color: white;
+        }
+
+        .btn-start:hover {
+            background-color: #7d3c98;
+        }
+
+        .btn-finish {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .btn-finish:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-comment {
+            background-color: #f1f1f1;
+            color: #555;
+        }
+
+        .btn-comment:hover {
+            background-color: #e1e1e1;
+        }
+
+        /* Estilos para formulário de nova tarefa */
+        .new-task-form {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            color: #8e44ad;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-title i {
+            margin-right: 0.75rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            flex: 1;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-control input,
+        .form-control select,
+        .form-control textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .form-control input:focus,
+        .form-control select:focus,
+        .form-control textarea:focus {
+            border-color: #8e44ad;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1);
+        }
+
+        .form-submit {
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-submit i {
+            margin-right: 0.5rem;
+        }
+
+        .form-submit:hover {
+            background-color: #7d3c98;
+        }
+
+        /* Estilos para comentários */
+        .comment-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #fafafa;
+            border-radius: 8px;
+        }
+
+        .comment-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .comment-item {
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: #8e44ad;
+        }
+
+        .comment-time {
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .comment-text {
+            color: #555;
+        }
+
+        .comment-image {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 0.75rem;
+        }
+
+        .comment-form {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .comment-btn {
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+
+        /* Estilos para visualização semanal */
+        .week-view {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+        }
+
+        .week-day {
+            background-color: #f5f0fa;
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 200px;
+        }
+
+        .week-day-header {
+            text-align: center;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e1d5e7;
+        }
+
+        .day-name {
+            font-weight: 600;
+            color: #8e44ad;
+        }
+
+        .day-date {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* Estilos para estatísticas */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+        }
+
+        .stat-header {
+            color: #8e44ad;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-header i {
+            margin-right: 0.75rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* Estilos para o painel do administrador */
+        .admin-dashboard {
+            padding: 1.5rem;
+        }
+
+        .user-list {
+            margin-top: 1.5rem;
+        }
+
+        .user-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .user-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #8e44ad;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-email {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .user-actions button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-view {
+            background-color: #8e44ad;
+            color: white;
+            margin-right: 0.5rem;
+        }
+
+        .btn-view:hover {
+            background-color: #7d3c98;
+        }
+
+        /* Utilitários e acessibilidade */
+        .hidden {
+            display: none;
+        }
+
+        .admin-indicator {
+            background-color: #8e44ad;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #8e44ad;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .week-view {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .login-form-container {
+                width: 90%;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="login-screen" class="login-container">
+        <div class="login-form-container">
+            <div class="login-form">
+                <div class="login-header">
+                    <h1>Agenda Diária 4.0</h1>
+                    <p class="text-gray-500">Entre para gerenciar suas atividades</p>
+                </div>
+                
+                <div id="login-error" class="bg-red-100 text-red-700 p-3 rounded mb-4 hidden"></div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="seu@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" class="form-input" placeholder="Sua senha">
+                </div>
+                
+                <div class="form-group flex items-center">
+                    <input type="checkbox" id="remember-me" class="mr-2">
+                    <label for="remember-me" class="text-sm text-gray-600">Lembrar de mim</label>
+                </div>
+                
+                <button id="login-btn" class="form-button">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Entrar
+                </button>
+                
+                <div class="form-footer">
+                    <p>Não tem uma conta? <a href="#" id="show-register" class="form-link">Cadastre-se</a></p>
+                    <p class="mt-2"><a href="#" id="forgot-password" class="form-link">Esqueceu a senha?</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Registro -->
+    <div id="register-screen" class="login-container hidden">
+        <div class="login-form-container">
+            <div class="login-form">
+                <div class="login-header">
+                    <h1>Criar Conta</h1>
+                    <p class="text-gray-500">Preencha os dados para se cadastrar</p>
+                </div>
+                
+                <div id="register-error" class="bg-red-100 text-red-700 p-3 rounded mb-4 hidden"></div>
+                
+                <div class="form-group">
+                    <label for="reg-name">Nome Completo</label>
+                    <input type="text" id="reg-name" class="form-input" placeholder="Seu nome">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" class="form-input" placeholder="seu@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-password">Senha</label>
+                    <input type="password" id="reg-password" class="form-input" placeholder="Mínimo 6 caracteres">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-confirm-password">Confirmar Senha</label>
+                    <input type="password" id="reg-confirm-password" class="form-input" placeholder="Digite novamente">
+                </div>
+                
+                <button id="register-btn" class="form-button">
+                    <i class="fas fa-user-plus mr-2"></i> Cadastrar
+                </button>
+                
+                <div class="form-footer">
+                    <p>Já tem uma conta? <a href="#" id="show-login" class="form-link">Faça login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela Principal do App -->
+    <div id="app-screen" class="app-container hidden">
+        <!-- Cabeçalho do App -->
+        <header class="header">
+            <h1 class="app-title">Agenda Diária</h1>
+            <div class="date-selector">
+                <button class="date-nav-btn" id="prev-day">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <span id="current-date">quinta-feira, 1 de maio de 2025</span>
+                <button class="date-nav-btn" id="next-day">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Navegação por abas -->
+        <div class="tabs">
+            <div class="tab active" data-tab="agenda">
+                <i class="fas fa-calendar-day mr-2"></i> Agenda
+            </div>
+            <div class="tab" data-tab="semana">
+                <i class="fas fa-calendar-week mr-2"></i> Semana
+            </div>
+            <div class="tab" data-tab="relatorios">
+                <i class="fas fa-chart-bar mr-2"></i> Relatórios
+            </div>
+            <div id="admin-tab" class="tab hidden" data-tab="admin">
+                <i class="fas fa-users-cog mr-2"></i> Administração
+            </div>
+            <div class="flex-grow"></div>
+            <div class="tab" data-tab="perfil">
+                <i class="fas fa-user mr-2"></i> <span id="user-name">Usuário</span>
+            </div>
+        </div>
+
+        <!-- Conteúdo das abas -->
+        <div class="content-container">
+            <!-- Aba da Agenda -->
+            <div id="agenda-tab-content" class="tab-content">
+                <!-- Formulário para adicionar nova tarefa -->
+                <div class="new-task-form">
+                    <h2 class="form-title"><i class="fas fa-plus-circle"></i> Nova Tarefa</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label class="form-label">Título</label>
+                            <input type="text" id="task-title" placeholder="Digite o título da tarefa">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label class="form-label">Descrição</label>
+                            <textarea id="task-description" rows="2" placeholder="Descreva os detalhes da tarefa"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label class="form-label">Hora de Início</label>
+                            <input type="time" id="task-start-time">
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="form-label">Hora de Término</label>
+                            <input type="time" id="task-end-time">
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="form-label">Prioridade</label>
+                            <select id="task-priority">
+                                <option value="normal">Normal</option>
+                                <option value="attention">Requer Atenção</option>
+                                <option value="critical">Crítica</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label class="form-label">Categoria</label>
+                            <select id="task-category">
+                                <option value="trabalho">Trabalho</option>
+                                <option value="pessoal">Pessoal</option>
+                                <option value="estudo">Estudo</option>
+                                <option value="saude">Saúde</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="form-label">Tarefa Recorrente</label>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="task-recurring" class="mr-2">
+                                <label for="task-recurring">Repetir tarefa</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="recurring-options" class="form-row hidden">
+                        <div class="form-control">
+                            <label class="form-label">Opções de Recorrência</label>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="flex items-center mr-4">
+                                    <input type="checkbox" name="recurrence-day" value="0" class="mr-1"> Dom
+                                </label>
+                                <label class="flex items-center mr-4">
+                                    <input type="checkbox" name="recurrence-day" value="1" class="mr-1"> Seg
+                                </label>
+                                <label class="flex items-center mr-4">
+                                    <input type="checkbox" name="recurrence-day" value="2" class="mr-1"> Ter
+                                </label>
+                                <label class="flex items-center mr-4">
+                                    <input type="checkbox" name="recurrence-day" value="3" class="mr-1"> Qua
+                                </label>
+                                <label class="flex items-center mr-4">
+                                    <input type="checkbox" name="recurrence-day" value="4" class="mr-1"> Qui
+                                </label>
+                                <label class="flex items-center mr-4">
+                                    <input type="checkbox" name="recurrence-day" value="5" class="mr-1"> Sex
+                                </label>
+                                <label class="flex items-center mr-4">
+                                    <input type="checkbox" name="recurrence-day" value="6" class="mr-1"> Sáb
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="recurrence-everyday" class="mr-1"> Todos os dias
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button id="save-task-btn" class="form-submit">
+                            <i class="fas fa-save"></i> Salvar Tarefa
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Lista de tarefas -->
+                <div class="task-list" id="task-list">
+                    <!-- As tarefas serão carregadas dinamicamente aqui -->
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Aba da Semana -->
+            <div id="semana-tab-content" class="tab-content hidden">
+                <div class="week-view" id="week-view">
+                    <!-- Os dias da semana serão carregados dinamicamente aqui -->
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Aba de Relatórios -->
+            <div id="relatorios-tab-content" class="tab-content hidden">
+                <h2 class="form-title"><i class="fas fa-chart-pie"></i> Estatísticas e Desempenho</h2>
+                
+                <div class="stats-container" id="stats-container">
+                    <!-- As estatísticas serão carregadas dinamicamente aqui -->
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Aba de Administração -->
+            <div id="admin-tab-content" class="tab-content hidden">
+                <div class="admin-dashboard">
+                    <h2 class="form-title"><i class="fas fa-users-cog"></i> Painel de Administração</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-control">
+                            <input type="text" id="search-users" placeholder="Buscar usuários..." class="form-input">
+                        </div>
+                        <button id="search-users-btn" class="form-submit">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </div>
+                    
+                    <div class="user-list" id="user-list">
+                        <!-- Os usuários serão carregados dinamicamente aqui -->
+                        <div class="loading">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Aba de Perfil -->
+            <div id="perfil-tab-content" class="tab-content hidden">
+                <div class="p-4">
+                    <h2 class="form-title"><i class="fas fa-user-circle"></i> Meu Perfil</h2>
+                    
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-medium mb-2">Nome</label>
+                            <p id="profile-name" class="text-gray-900">Carregando...</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-medium mb-2">Email</label>
+                            <p id="profile-email" class="text-gray-900">Carregando...</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-medium mb-2">Tipo de Conta</label>
+                            <p id="profile-type" class="text-gray-900">Carregando...</p>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <button id="logout-btn" class="form-submit bg-red-600 hover:bg-red-700">
+                                <i class="fas fa-sign-out-alt"></i> Sair da Conta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Comentários -->
+    <div id="comment-modal" class="fixed inset-0 flex items-center justify-center hidden" style="background-color: rgba(0,0,0,0.5); z-index: 1000;">
+        <div class="bg-white rounded-lg w-full max-w-md mx-4 shadow-lg">
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-purple-800">Comentários</h3>
+                <button id="close-comment-modal" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-4 max-h-96 overflow-y-auto" id="comments-container">
+                <!-- Os comentários serão carregados dinamicamente aqui -->
+            </div>
+            
+            <div class="p-4 border-t border-gray-200">
+                <div class="mb-3">
+                    <textarea id="new-comment-text" class="w-full p-2 border border-gray-300 rounded" placeholder="Digite seu comentário..."></textarea>
+                </div>
+                <div class="flex items-center mb-3">
+                    <label for="comment-image" class="cursor-pointer flex items-center text-purple-700">
+                        <i class="fas fa-image mr-2"></i> Adicionar imagem
+                    </label>
+                    <input type="file" id="comment-image" class="hidden" accept="image/*">
+                    <span id="selected-image-name" class="ml-2 text-sm text-gray-500"></span>
+                </div>
+                <div id="image-preview" class="mb-3 hidden">
+                    <img id="comment-image-preview" class="max-w-full h-auto rounded" src="">
+                    <button id="remove-image" class="mt-1 text-sm text-red-600">Remover imagem</button>
+                </div>
+                <button id="add-comment-btn" class="bg-purple-700 text-white py-2 px-4 rounded hover:bg-purple-800">
+                    <i class="fas fa-paper-plane mr-2"></i> Adicionar Comentário
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase App (obrigatório) -->
+    <script src="https://cdn.jsdelivr.net/npm/firebase@9.22.2/firebase-app-compat.js"></script>
+    <!-- Firebase Auth -->
+    <script src="https://cdn.jsdelivr.net/npm/firebase@9.22.2/firebase-auth-compat.js"></script>
+    <!-- Firebase Firestore -->
+    <script src="https://cdn.jsdelivr.net/npm/firebase@9.22.2/firebase-firestore-compat.js"></script>
+    <!-- Firebase Storage -->
+    <script src="https://cdn.jsdelivr.net/npm/firebase@9.22.2/firebase-storage-compat.js"></script>
+
+    <!-- Arquivo com configurações do Firebase -->
+    <script>
+        /**
+         * Configuração do Firebase - Instruções de uso
+         * 
+         * PASSO A PASSO PARA CONFIGURAR O FIREBASE:
+         * 
+         * 1. CRIAR UMA CONTA NO FIREBASE:
+         *    - Acesse https://firebase.google.com/ e faça login com sua conta Google
+         *    - Clique em "Ir para o console" no canto superior direito
+         * 
+         * 2. CRIAR UM NOVO PROJETO:
+         *    - Clique em "Adicionar projeto"
+         *    - Digite um nome para o projeto (ex: "Agenda Diaria")
+         *    - Siga os passos para criar o projeto
+         * 
+         * 3. CONFIGURAR AUTENTICAÇÃO:
+         *    - No menu lateral, clique em "Authentication"
+         *    - Clique em "Começar"
+         *    - Na aba "Sign-in method", habilite "Email/senha"
+         * 
+         * 4. CONFIGURAR FIRESTORE DATABASE:
+         *    - No menu lateral, clique em "Firestore Database"
+         *    - Clique em "Criar banco de dados"
+         *    - Selecione "Iniciar no modo de produção" ou "Iniciar no modo de teste"
+         *    - Escolha a localização do servidor (recomendado: us-central1)
+         * 
+         * 5. CONFIGURAR REGRAS DO FIRESTORE:
+         *    - Na aba "Regras" do Firestore, você pode definir as regras de segurança
+         *    - Para início, pode usar as regras abaixo:
+         *    
+         *    rules_version = '2';
+         *    service cloud.firestore {
+         *      match /databases/{database}/documents {
+         *        match /users/{userId} {
+         *          allow read, write: if request.auth != null && request.auth.uid == userId;
+         *        }
+         *        match /users/{userId}/tasks/{taskId} {
+         *          allow read, write: if request.auth != null && request.auth.uid == userId;
+         *        }
+         *        match /admins/{adminId} {
+         *          allow read, write: if request.auth != null && request.auth.uid == adminId;
+         *        }
+         *      }
+         *    }
+         * 
+         * 6. CONFIGURAR STORAGE:
+         *    - No menu lateral, clique em "Storage"
+         *    - Clique em "Começar"
+         *    - Escolha as regras de segurança (recomendado: iniciar no modo de produção)
+         *    - Escolha a localização do servidor (recomendado: us-central1)
+         * 
+         * 7. OBTER CREDENCIAIS DA WEB:
+         *    - No menu lateral, clique em "Project Overview" (Visão geral do projeto)
+         *    - Clique no ícone da web (</>)
+         *    - Registre seu app dando um apelido (ex: "agenda-web")
+         *    - Você verá um objeto de configuração como este:
+         *    
+         *    const firebaseConfig = {
+         *      apiKey: "sua-api-key",
+         *      authDomain: "seu-projeto.firebaseapp.com",
+         *      projectId: "seu-projeto",
+         *      storageBucket: "seu-projeto.appspot.com",
+         *      messagingSenderId: "seu-messaging-sender-id",
+         *      appId: "seu-app-id"
+         *    };
+         * 
+         * 8. SUBSTITUIR AS CREDENCIAIS:
+         *    - Copie o objeto firebaseConfig que o Firebase forneceu
+         *    - Substitua o objeto firebaseConfig abaixo pelo seu
+         * 
+         * 9. CONFIGURAR ADMINISTRADOR:
+         *    - Depois de criar um usuário no aplicativo
+         *    - Vá ao Firestore Database
+         *    - Crie uma coleção chamada "admins"
+         *    - Adicione um documento com o ID igual ao UID do usuário que será admin
+         *    - Adicione um campo "isAdmin" com valor true
+         * 
+         * 10. ESTRUTURA DO BANCO DE DADOS:
+         *    - users/{userId} - Dados do usuário
+         *    - users/{userId}/tasks/{taskId} - Tarefas do usuário
+         *    - admins/{adminId} - Administradores do sistema
+         * 
+         * IMPORTANTE: Nunca compartilhe suas credenciais do Firebase em repositórios públicos!
+         */
+
+        // Substitua este objeto com as suas credenciais do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAc38Mx5TRU7dIQk91djTtqsbJILnEPj-Y",
+   authDomain: "controletarefas-e0251.firebaseapp.com", 
+   projectId: "controletarefas-e0251", 
+   storageBucket: "controletarefas-e0251.firebasestorage.app", 
+   messagingSenderId: "895862679232", 
+   appId: "1:895862679232:web:d61b017a67b29eb37d2f25" }; 
+        
+
+        // Inicializa o Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Referências para serviços do Firebase
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Verifica se um usuário é administrador
+        async function isAdmin(userId) {
+            try {
+                const adminDoc = await db.collection('admins').doc(userId).get();
+                return adminDoc.exists && adminDoc.data().isAdmin === true;
+            } catch (error) {
+                console.error("Erro ao verificar se é admin:", error);
+                return false;
+            }
+        }
+
+        // Registra um novo usuário
+        function registerUser(name, email, password) {
+            return auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Adiciona o nome de usuário ao perfil
+                    return userCredential.user.updateProfile({
+                        displayName: name
+                    }).then(() => {
+                        // Cria documento do usuário no Firestore
+                        return db.collection('users').doc(userCredential.user.uid).set({
+                            name: name,
+                            email: email,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }).then(() => {
+                        return userCredential.user;
+                    });
+                });
+        }
+
+        // Faz login com email e senha
+        function loginUser(email, password, remember) {
+            const persistence = remember ? 
+                firebase.auth.Auth.Persistence.LOCAL : 
+                firebase.auth.Auth.Persistence.SESSION;
+            
+            return auth.setPersistence(persistence)
+                .then(() => {
+                    return auth.signInWithEmailAndPassword(email, password);
+                });
+        }
+
+        // Recuperação de senha
+        function resetPassword(email) {
+            return auth.sendPasswordResetEmail(email);
+        }
+
+        // Salva uma tarefa para o usuário atual
+        function saveTask(taskData) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+
+            // Adiciona metadados à tarefa
+            taskData.createdBy = user.uid;
+            taskData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            
+            return db.collection('users').doc(user.uid).collection('tasks').add(taskData);
+        }
+
+        // Salva uma tarefa para outro usuário (como administrador)
+        function saveTaskAsAdmin(userId, taskData) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+
+            // Adiciona metadados à tarefa
+            taskData.createdBy = user.uid;
+            taskData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            taskData.addedByAdmin = true;
+            
+            return db.collection('users').doc(userId).collection('tasks').add(taskData);
+        }
+
+        // Obtém tarefas do usuário para uma data específica
+        function getTasksForDate(date) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+
+            // Formata a data para busca (início e fim do dia)
+            const startOfDay = new Date(date);
+            startOfDay.setHours(0, 0, 0, 0);
+            
+            const endOfDay = new Date(date);
+            endOfDay.setHours(23, 59, 59, 999);
+
+            return db.collection('users').doc(user.uid).collection('tasks')
+                .where('date', '>=', startOfDay)
+                .where('date', '<=', endOfDay)
+                .orderBy('date')
+                .orderBy('startTime')
+                .get()
+                .then(snapshot => {
+                    return snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                });
+        }
+
+        // Obtém tarefas do usuário para uma semana
+        function getTasksForWeek(startDate, endDate) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+
+            return db.collection('users').doc(user.uid).collection('tasks')
+                .where('date', '>=', startDate)
+                .where('date', '<=', endDate)
+                .orderBy('date')
+                .orderBy('startTime')
+                .get()
+                .then(snapshot => {
+                    return snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                });
+        }
+
+        // Obtém tarefas de outro usuário (como administrador)
+        function getUserTasks(userId, date) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+
+            // Formata a data para busca (início e fim do dia)
+            const startOfDay = new Date(date);
+            startOfDay.setHours(0, 0, 0, 0);
+            
+            const endOfDay = new Date(date);
+            endOfDay.setHours(23, 59, 59, 999);
+
+            return db.collection('users').doc(userId).collection('tasks')
+                .where('date', '>=', startOfDay)
+                .where('date', '<=', endOfDay)
+                .orderBy('date')
+                .orderBy('startTime')
+                .get()
+                .then(snapshot => {
+                    return snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                });
+        }
+
+        // Atualiza uma tarefa
+        function updateTask(taskId, taskData) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+
+            // Adiciona metadados de atualização
+            taskData.updatedBy = user.uid;
+            taskData.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+            
+            return db.collection('users').doc(user.uid).collection('tasks').doc(taskId).update(taskData);
+        }
+
+        // Atualiza uma tarefa de outro usuário (como administrador)
+        function updateTaskAsAdmin(userId, taskId, taskData) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+
+            // Adiciona metadados de atualização
+            taskData.updatedBy = user.uid;
+            taskData.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+            taskData.updatedByAdmin = true;
+            
+            return db.collection('users').doc(userId).collection('tasks').doc(taskId).update(taskData);
+        }
+
+        // Adiciona um comentário a uma tarefa
+        function addComment(taskId, commentData) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+
+            // Adiciona metadados ao comentário
+            commentData.author = user.displayName;
+            commentData.authorId = user.uid;
+            commentData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            
+            return db.collection('users').doc(user.uid).collection('tasks').doc(taskId)
+                .collection('comments').add(commentData);
+        }
+
+        // Adiciona um comentário a uma tarefa de outro usuário (como administrador)
+        function addCommentAsAdmin(userId, taskId, commentData) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+
+            // Adiciona metadados ao comentário
+            commentData.author = user.displayName + " (Admin)";
+            commentData.authorId = user.uid;
+            commentData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            commentData.isAdminComment = true;
+            
+            return db.collection('users').doc(userId).collection('tasks').doc(taskId)
+                .collection('comments').add(commentData);
+        }
+
+        // Obtém comentários de uma tarefa
+        function getComments(taskId) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+
+            return db.collection('users').doc(user.uid).collection('tasks').doc(taskId)
+                .collection('comments')
+                .orderBy('createdAt', 'desc')
+                .get()
+                .then(snapshot => {
+                    return snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                });
+        }
+
+        // Obtém comentários de uma tarefa de outro usuário (como administrador)
+        function getCommentsAsAdmin(userId, taskId) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+
+            return db.collection('users').doc(userId).collection('tasks').doc(taskId)
+                .collection('comments')
+                .orderBy('createdAt', 'desc')
+                .get()
+                .then(snapshot => {
+                    return snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                });
+        }
+
+        // Upload de imagem para o Firebase Storage
+        function uploadImage(file) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+            
+            // Cria um nome único para o arquivo
+            const fileName = `${user.uid}_${Date.now()}_${file.name}`;
+            const storageRef = storage.ref(`images/${fileName}`);
+            
+            // Faz o upload do arquivo
+            return storageRef.put(file).then(() => {
+                // Retorna a URL do arquivo
+                return storageRef.getDownloadURL();
+            });
+        }
+
+        // Obtém todos os usuários (apenas para administradores)
+        function getAllUsers() {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+            
+            return db.collection('users').get()
+                .then(snapshot => {
+                    return snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                });
+        }
+
+        // Busca usuários por nome ou email (apenas para administradores)
+        function searchUsers(searchTerm) {
+            const user = auth.currentUser;
+            if (!user) return Promise.reject("Usuário não autenticado");
+            
+            // Firebase não suporta busca por substrings, então vamos buscar todos
+            // e filtrar no cliente (em uma aplicação real, usaríamos Algolia ou similar)
+            return db.collection('users').get()
+                .then(snapshot => {
+                    return snapshot.docs
+                        .map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }))
+                        .filter(user => {
+                            const name = user.name.toLowerCase();
+                            const email = user.email.toLowerCase();
+                            const term = searchTerm.toLowerCase();
+                            return name.includes(term) || email.includes(term);
+                        });
+                });
+        }
+    </script>
+
+    <!-- Script principal do aplicativo -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos da interface (login e registro)
+            const loginScreen = document.getElementById('login-screen');
+            const registerScreen = document.getElementById('register-screen');
+            const appScreen = document.getElementById('app-screen');
+            
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            const showRegisterBtn = document.getElementById('show-register');
+            const showLoginBtn = document.getElementById('show-login');
+            const forgotPasswordBtn = document.getElementById('forgot-password');
+            const logoutBtn = document.getElementById('logout-btn');
+            
+            const loginError = document.getElementById('login-error');
+            const registerError = document.getElementById('register-error');
+            
+            // Elementos da interface (app)
+            const currentDateEl = document.getElementById('current-date');
+            const prevDayBtn = document.getElementById('prev-day');
+            const nextDayBtn = document.getElementById('next-day');
+            const userNameEl = document.getElementById('user-name');
+            
+            const tabs = document.querySelectorAll('.tab');
+            const adminTab = document.getElementById('admin-tab');
+            
+            const taskTitleInput = document.getElementById('task-title');
+            const taskDescriptionInput = document.getElementById('task-description');
+            const taskStartTimeInput = document.getElementById('task-start-time');
+            const taskEndTimeInput = document.getElementById('task-end-time');
+            const taskPrioritySelect = document.getElementById('task-priority');
+            const taskCategorySelect = document.getElementById('task-category');
+            const taskRecurringCheckbox = document.getElementById('task-recurring');
+            const recurringOptionsDiv = document.getElementById('recurring-options');
+            const recurrenceEverydayCheckbox = document.getElementById('recurrence-everyday');
+            const recurrenceDayCheckboxes = document.querySelectorAll('input[name="recurrence-day"]');
+            
+            const saveTaskBtn = document.getElementById('save-task-btn');
+            const taskListEl = document.getElementById('task-list');
+            
+            const commentModal = document.getElementById('comment-modal');
+            const closeCommentModalBtn = document.getElementById('close-comment-modal');
+            const commentsContainer = document.getElementById('comments-container');
+            const newCommentText = document.getElementById('new-comment-text');
+            const commentImageInput = document.getElementById('comment-image');
+            const selectedImageName = document.getElementById('selected-image-name');
+            const imagePreview = document.getElementById('image-preview');
+            const commentImagePreview = document.getElementById('comment-image-preview');
+            const removeImageBtn = document.getElementById('remove-image');
+            const addCommentBtn = document.getElementById('add-comment-btn');
+            
+            // Elementos do perfil
+            const profileNameEl = document.getElementById('profile-name');
+            const profileEmailEl = document.getElementById('profile-email');
+            const profileTypeEl = document.getElementById('profile-type');
+            
+            // Elementos da administração
+            const searchUsersInput = document.getElementById('search-users');
+            const searchUsersBtn = document.getElementById('search-users-btn');
+            const userListEl = document.getElementById('user-list');
+            
+            // Estado do aplicativo
+            let currentDate = new Date();
+            let currentUser = null;
+            let isUserAdmin = false;
+            let selectedTaskId = null;
+            let selectedUserId = null; // Para modo administrador
+            let selectedImageFile = null;
+            
+            // Inicializa o aplicativo
+            function initApp() {
+                // Configura os eventos de autenticação
+                configureAuthEvents();
+                
+                // Configura eventos de interface
+                configureUIEvents();
+                
+                // Verifica o estado de autenticação atual
+                auth.onAuthStateChanged(function(user) {
+                    if (user) {
+                        handleUserAuthenticated(user);
+                    } else {
+                        showLoginScreen();
+                    }
+                });
+            }
+            
+            // Configura os eventos relacionados à autenticação
+            function configureAuthEvents() {
+                // Evento de login
+                loginBtn.addEventListener('click', function() {
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    const remember = document.getElementById('remember-me').checked;
+                    
+                    loginError.classList.add('hidden');
+                    loginBtn.disabled = true;
+                    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Entrando...';
+                    
+                    loginUser(email, password, remember)
+                        .then(() => {
+                            // O redirecionamento será tratado pelo onAuthStateChanged
+                        })
+                        .catch(error => {
+                            loginError.textContent = traduzErroFirebase(error.code);
+                            loginError.classList.remove('hidden');
+                            loginBtn.disabled = false;
+                            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Entrar';
+                        });
+                });
+                
+                // Evento de registro
+                registerBtn.addEventListener('click', function() {
+                    const name = document.getElementById('reg-name').value;
+                    const email = document.getElementById('reg-email').value;
+                    const password = document.getElementById('reg-password').value;
+                    const confirmPassword = document.getElementById('reg-confirm-password').value;
+                    
+                    // Validações básicas
+                    if (!name || !email || !password) {
+                        registerError.textContent = 'Todos os campos são obrigatórios.';
+                        registerError.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    if (password !== confirmPassword) {
+                        registerError.textContent = 'As senhas não coincidem.';
+                        registerError.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    if (password.length < 6) {
+                        registerError.textContent = 'A senha deve ter pelo menos 6 caracteres.';
+                        registerError.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    registerError.classList.add('hidden');
+                    registerBtn.disabled = true;
+                    registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Cadastrando...';
+                    
+                    registerUser(name, email, password)
+                        .then(() => {
+                            // O redirecionamento será tratado pelo onAuthStateChanged
+                        })
+                        .catch(error => {
+                            registerError.textContent = traduzErroFirebase(error.code);
+                            registerError.classList.remove('hidden');
+                            registerBtn.disabled = false;
+                            registerBtn.innerHTML = '<i class="fas fa-user-plus mr-2"></i> Cadastrar';
+                        });
+                });
+                
+                // Evento de recuperação de senha
+                forgotPasswordBtn.addEventListener('click', function() {
+                    const email = document.getElementById('email').value;
+                    
+                    if (!email) {
+                        loginError.textContent = 'Digite seu email para recuperar a senha.';
+                        loginError.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    loginError.classList.add('hidden');
+                    forgotPasswordBtn.disabled = true;
+                    
+                    resetPassword(email)
+                        .then(() => {
+                            alert('Enviamos um email para recuperação de senha. Verifique sua caixa de entrada.');
+                            forgotPasswordBtn.disabled = false;
+                        })
+                        .catch(error => {
+                            loginError.textContent = traduzErroFirebase(error.code);
+                            loginError.classList.remove('hidden');
+                            forgotPasswordBtn.disabled = false;
+                        });
+                });
+                
+                // Evento de logout
+                logoutBtn.addEventListener('click', function() {
+                    auth.signOut().then(() => {
+                        showLoginScreen();
+                    }).catch(error => {
+                        console.error('Erro ao fazer logout:', error);
+                    });
+                });
+            }
+            
+            // Configura eventos da interface do usuário
+            function configureUIEvents() {
+                // Alternar entre login e registro
+                showRegisterBtn.addEventListener('click', function() {
+                    loginScreen.classList.add('hidden');
+                    registerScreen.classList.remove('hidden');
+                });
+                
+                showLoginBtn.addEventListener('click', function() {
+                    registerScreen.classList.add('hidden');
+                    loginScreen.classList.remove('hidden');
+                });
+                
+                // Navegação de data
+                prevDayBtn.addEventListener('click', function() {
+                    currentDate.setDate(currentDate.getDate() - 1);
+                    updateDateDisplay();
+                    loadTasksForCurrentDate();
+                });
+                
+                nextDayBtn.addEventListener('click', function() {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                    updateDateDisplay();
+                    loadTasksForCurrentDate();
+                });
+                
+                // Navegação de abas
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const tabName = this.dataset.tab;
+                        
+                        // Remove a classe ativa de todas as abas
+                        tabs.forEach(t => t.classList.remove('active'));
+                        
+                        // Adiciona a classe ativa na aba clicada
+                        this.classList.add('active');
+                        
+                        // Esconde todos os conteúdos de aba
+                        document.querySelectorAll('.tab-content').forEach(content => {
+                            content.classList.add('hidden');
+                        });
+                        
+                        // Mostra o conteúdo da aba selecionada
+                        document.getElementById(`${tabName}-tab-content`).classList.remove('hidden');
+                        
+                        // Carrega dados específicos da aba
+                        if (tabName === 'agenda') {
+                            loadTasksForCurrentDate();
+                        } else if (tabName === 'semana') {
+                            loadTasksForCurrentWeek();
+                        } else if (tabName === 'relatorios') {
+                            loadStats();
+                        } else if (tabName === 'admin') {
+                            loadUsers();
+                        }
+                    });
+                });
+                
+                // Opções de recorrência
+                taskRecurringCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        recurringOptionsDiv.classList.remove('hidden');
+                    } else {
+                        recurringOptionsDiv.classList.add('hidden');
+                    }
+                });
+                
+                // Checkbox "Todos os dias"
+                recurrenceEverydayCheckbox.addEventListener('change', function() {
+                    recurrenceDayCheckboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                        checkbox.disabled = this.checked;
+                    });
+                });
+                
+                // Salvar tarefa
+                saveTaskBtn.addEventListener('click', saveTask);
+                
+                // Modal de comentários
+                closeCommentModalBtn.addEventListener('click', function() {
+                    commentModal.classList.add('hidden');
+                });
+                
+                // Upload de imagem para comentário
+                commentImageInput.addEventListener('change', function(event) {
+                    if (event.target.files.length > 0) {
+                        selectedImageFile = event.target.files[0];
+                        selectedImageName.textContent = selectedImageFile.name;
+                        
+                        // Mostra preview da imagem
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            commentImagePreview.src = e.target.result;
+                            imagePreview.classList.remove('hidden');
+                        };
+                        reader.readAsDataURL(selectedImageFile);
+                    }
+                });
+                
+                // Remover imagem selecionada
+                removeImageBtn.addEventListener('click', function() {
+                    selectedImageFile = null;
+                    selectedImageName.textContent = '';
+                    imagePreview.classList.add('hidden');
+                    commentImageInput.value = '';
+                });
+                
+                // Adicionar comentário
+                addCommentBtn.addEventListener('click', addNewComment);
+                
+                // Buscar usuários (admin)
+                searchUsersBtn.addEventListener('click', function() {
+                    const searchTerm = searchUsersInput.value.trim();
+                    if (searchTerm) {
+                        searchUsers(searchTerm)
+                            .then(users => {
+                                renderUserList(users);
+                            })
+                            .catch(error => {
+                                console.error('Erro ao buscar usuários:', error);
+                                userListEl.innerHTML = '<p class="text-red-500">Erro ao buscar usuários. Tente novamente.</p>';
+                            });
+                    } else {
+                        loadUsers(); // Carrega todos os usuários se a busca estiver vazia
+                    }
+                });
+            }
+            
+            // Manipula o evento de autenticação bem-sucedida
+            async function handleUserAuthenticated(user) {
+                currentUser = user;
+                
+                // Verifica se o usuário é administrador
+                isUserAdmin = await isAdmin(user.uid);
+                
+                // Atualiza a interface do usuário
+                userNameEl.textContent = user.displayName || 'Usuário';
+                
+                // Atualiza o perfil
+                profileNameEl.textContent = user.displayName || 'Não informado';
+                profileEmailEl.textContent = user.email;
+                profileTypeEl.textContent = isUserAdmin ? 'Administrador' : 'Usuário comum';
+                
+                // Mostra/esconde tab de admin
+                if (isUserAdmin) {
+                    adminTab.classList.remove('hidden');
+                } else {
+                    adminTab.classList.add('hidden');
+                }
+                
+                // Atualiza a data e carrega tarefas
+                updateDateDisplay();
+                loadTasksForCurrentDate();
+                
+                // Mostra a tela principal do app
+                showAppScreen();
+            }
+            
+            // Atualiza a exibição da data atual
+            function updateDateDisplay() {
+                currentDateEl.textContent = formatarData(currentDate);
+            }
+            
+            // Carrega as tarefas para a data atual
+            function loadTasksForCurrentDate() {
+                taskListEl.innerHTML = '<div class="loading"><div class="loading-spinner"></div></div>';
+                
+                const fetchTasks = selectedUserId && isUserAdmin 
+                    ? getUserTasks(selectedUserId, currentDate) 
+                    : getTasksForDate(currentDate);
+                
+                fetchTasks
+                    .then(tasks => {
+                        renderTasks(tasks);
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar tarefas:', error);
+                        taskListEl.innerHTML = '<p class="text-red-500">Erro ao carregar tarefas. Tente novamente.</p>';
+                    });
+            }
+            
+            // Carrega as tarefas para a semana atual
+            function loadTasksForCurrentWeek() {
+                const weekView = document.getElementById('week-view');
+                weekView.innerHTML = '<div class="loading"><div class="loading-spinner"></div></div>';
+                
+                // Calcula o início e fim da semana
+                const startOfWeek = new Date(currentDate);
+                startOfWeek.setDate(currentDate.getDate() - currentDate.getDay()); // Domingo
+                startOfWeek.setHours(0, 0, 0, 0);
+                
+                const endOfWeek = new Date(startOfWeek);
+                endOfWeek.setDate(startOfWeek.getDate() + 6); // Sábado
+                endOfWeek.setHours(23, 59, 59, 999);
+                
+                getTasksForWeek(startOfWeek, endOfWeek)
+                    .then(tasks => {
+                        renderWeekView(startOfWeek, tasks);
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar tarefas da semana:', error);
+                        weekView.innerHTML = '<p class="text-red-500">Erro ao carregar tarefas. Tente novamente.</p>';
+                    });
+            }
+            
+            // Carrega estatísticas
+            function loadStats() {
+                const statsContainer = document.getElementById('stats-container');
+                statsContainer.innerHTML = '<div class="loading"><div class="loading-spinner"></div></div>';
+                
+                // Em uma aplicação real, buscaríamos estatísticas do Firestore
+                // Para simplificar, vamos criar dados simulados
+                
+                setTimeout(() => {
+                    statsContainer.innerHTML = `
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <i class="fas fa-check-circle text-green-500"></i>
+                                Taxa de Conclusão
+                            </div>
+                            <div class="stat-value">76%</div>
+                            <div class="stat-label">Tarefas concluídas nos últimos 30 dias</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <i class="fas fa-clock text-blue-500"></i>
+                                Pontualidade
+                            </div>
+                            <div class="stat-value">82%</div>
+                            <div class="stat-label">Tarefas iniciadas no horário planejado</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <i class="fas fa-tasks text-purple-500"></i>
+                                Produtividade
+                            </div>
+                            <div class="stat-value">15</div>
+                            <div class="stat-label">Tarefas concluídas por semana (média)</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <i class="fas fa-fire text-red-500"></i>
+                                Prioridades
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div class="bg-red-500 h-4 rounded-full" style="width: 25%"></div>
+                                </div>
+                                <span class="ml-2">25%</span>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-1">Críticas</div>
+                            
+                            <div class="flex items-center mt-2">
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div class="bg-yellow-500 h-4 rounded-full" style="width: 40%"></div>
+                                </div>
+                                <span class="ml-2">40%</span>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-1">Atenção</div>
+                            
+                            <div class="flex items-center mt-2">
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div class="bg-green-500 h-4 rounded-full" style="width: 35%"></div>
+                                </div>
+                                <span class="ml-2">35%</span>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-1">Normais</div>
+                        </div>
+                    `;
+                }, 1000);
+            }
+            
+            // Carrega lista de usuários (apenas para administradores)
+            function loadUsers() {
+                if (!isUserAdmin) return;
+                
+                userListEl.innerHTML = '<div class="loading"><div class="loading-spinner"></div></div>';
+                
+                getAllUsers()
+                    .then(users => {
+                        renderUserList(users);
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar usuários:', error);
+                        userListEl.innerHTML = '<p class="text-red-500">Erro ao carregar usuários. Tente novamente.</p>';
+                    });
+            }
+            
+            // Renderiza a lista de usuários
+            function renderUserList(users) {
+                if (users.length === 0) {
+                    userListEl.innerHTML = '<p class="text-gray-500">Nenhum usuário encontrado.</p>';
+                    return;
+                }
+                
+                let html = '';
+                
+                users.forEach(user => {
+                    // Obtém as iniciais do nome para o avatar
+                    const initials = user.name
+                        ? user.name.split(' ')
+                              .map(word => word[0])
+                              .slice(0, 2)
+                              .join('')
+                              .toUpperCase()
+                        : '?';
+                    
+                    html += `
+                        <div class="user-card">
+                            <div class="user-info">
+                                <div class="user-avatar">${initials}</div>
+                                <div>
+                                    <div class="user-name">${user.name || 'Sem nome'}</div>
+                                    <div class="user-email">${user.email}</div>
+                                </div>
+                            </div>
+                            <div class="user-actions">
+                                <button class="btn-view" onclick="viewUserAgenda('${user.id}')">
+                                    <i class="fas fa-calendar-alt mr-1"></i> Ver Agenda
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                userListEl.innerHTML = html;
+            }
+            
+            // Ver agenda de um usuário específico (como administrador)
+            window.viewUserAgenda = function(userId) {
+                if (!isUserAdmin) return;
+                
+                selectedUserId = userId;
+                
+                // Muda para a aba de agenda
+                tabs.forEach(t => t.classList.remove('active'));
+                document.querySelector('[data-tab="agenda"]').classList.add('active');
+                
+                // Esconde todos os conteúdos de aba
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                // Mostra o conteúdo da aba de agenda
+                document.getElementById('agenda-tab-content').classList.remove('hidden');
+                
+                // Carrega as tarefas do usuário
+                loadTasksForCurrentDate();
+            };
+            
+            // Renderiza as tarefas
+            function renderTasks(tasks) {
+                if (tasks.length === 0) {
+                    taskListEl.innerHTML = `
+                        <div class="text-center py-10">
+                            <i class="fas fa-calendar-check text-gray-300 text-5xl mb-4"></i>
+                            <p class="text-gray-500">Nenhuma tarefa para este dia.</p>
+                            <p class="text-gray-400 text-sm mt-2">Adicione uma nova tarefa usando o formulário acima.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                
+                tasks.forEach(task => {
+                    const priorityClass = getPriorityClass(task.priority);
+                    const startTime = task.startTime || '';
+                    const endTime = task.endTime || '';
+                    const timeDisplay = startTime && endTime
+                        ? `${startTime} - ${endTime}`
+                        : startTime;
+                    
+                    const isStarted = task.actualStartTime ? true : false;
+                    const isFinished = task.actualEndTime ? true : false;
+                    
+                    const startButtonDisabled = isFinished || isStarted ? 'disabled' : '';
+                    const finishButtonDisabled = isFinished || !isStarted ? 'disabled' : '';
+                    
+                    html += `
+                        <div class="task-item ${priorityClass}" data-id="${task.id}">
+                            <div class="task-header">
+                                <div>
+                                    <h3 class="task-title">${task.title}</h3>
+                                    <p class="task-description">${task.description || 'Sem descrição'}</p>
+                                </div>
+                                <div class="task-time">
+                                    <i class="far fa-clock"></i>
+                                    <span>${timeDisplay}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="task-actions">
+                                <button class="task-btn btn-start" onclick="startTask('${task.id}')" ${startButtonDisabled}>
+                                    <i class="fas fa-play"></i> ${isStarted ? 'Iniciada' : 'Iniciar Tarefa'}
+                                </button>
+                                <button class="task-btn btn-finish" onclick="finishTask('${task.id}')" ${finishButtonDisabled}>
+                                    <i class="fas fa-check"></i> ${isFinished ? 'Finalizada' : 'Finalizar Tarefa'}
+                                </button>
+                                <button class="task-btn btn-comment" onclick="showComments('${task.id}')">
+                                    <i class="fas fa-comment-alt"></i> Comentários
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                taskListEl.innerHTML = html;
+            }
+            
+            // Renderiza a visualização da semana
+            function renderWeekView(startOfWeek, tasks) {
+                const weekView = document.getElementById('week-view');
+                let html = '';
+                
+                // Cria um objeto para agrupar tarefas por dia
+                const tasksByDay = {};
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(startOfWeek);
+                    day.setDate(startOfWeek.getDate() + i);
+                    
+                    // Usa a data como chave (formato YYYY-MM-DD)
+                    const dateKey = day.toISOString().split('T')[0];
+                    tasksByDay[dateKey] = [];
+                }
+                
+                // Agrupa as tarefas por dia
+                tasks.forEach(task => {
+                    const taskDate = task.date.toDate().toISOString().split('T')[0];
+                    if (tasksByDay[taskDate]) {
+                        tasksByDay[taskDate].push(task);
+                    }
+                });
+                
+                // Gera o HTML para cada dia da semana
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(startOfWeek);
+                    day.setDate(startOfWeek.getDate() + i);
+                    
+                    const dateKey = day.toISOString().split('T')[0];
+                    const dayTasks = tasksByDay[dateKey] || [];
+                    
+                    const isToday = isSameDay(day, new Date());
+                    const dayClass = isToday ? 'bg-purple-50 border border-purple-200' : '';
+                    
+                    html += `
+                        <div class="week-day ${dayClass}">
+                            <div class="week-day-header">
+                                <div class="day-name">${getDayName(day.getDay())}</div>
+                                <div class="day-date">${formatarDataCurta(day)}</div>
+                            </div>
+                            
+                            <div class="week-day-tasks">
+                                ${dayTasks.length === 0 
+                                    ? '<p class="text-gray-400 text-center text-sm">Sem tarefas</p>' 
+                                    : renderDayTasks(dayTasks)}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                weekView.innerHTML = html;
+            }
+            
+            // Renderiza as tarefas de um dia específico (para visualização semanal)
+            function renderDayTasks(tasks) {
+                let html = '';
+                
+                tasks.forEach(task => {
+                    const priorityClass = getPriorityClass(task.priority);
+                    const startTime = task.startTime || '';
+                    
+                    html += `
+                        <div class="p-2 mb-2 rounded ${priorityClass.replace('task-priority-', 'bg-')}">
+                            <div class="text-xs">${startTime}</div>
+                            <div class="font-medium">${task.title}</div>
+                        </div>
+                    `;
+                });
+                
+                return html;
+            }
+            
+            // Salva uma nova tarefa
+            function saveTask() {
+                const title = taskTitleInput.value.trim();
+                const description = taskDescriptionInput.value.trim();
+                const startTime = taskStartTimeInput.value;
+                const endTime = taskEndTimeInput.value;
+                const priority = taskPrioritySelect.value;
+                const category = taskCategorySelect.value;
+                const isRecurring = taskRecurringCheckbox.checked;
+                
+                // Validações básicas
+                if (!title) {
+                    alert('Por favor, informe o título da tarefa.');
+                    return;
+                }
+                
+                if (!startTime) {
+                    alert('Por favor, informe a hora de início da tarefa.');
+                    return;
+                }
+                
+                // Cria o objeto da tarefa
+                const taskData = {
+                    title: title,
+                    description: description,
+                    date: new Date(currentDate),
+                    startTime: startTime,
+                    endTime: endTime,
+                    priority: priority,
+                    category: category,
+                    completed: false,
+                    createdAt: new Date()
+                };
+                
+                // Se for tarefa recorrente, adiciona os dias de recorrência
+                if (isRecurring) {
+                    const recurrenceDays = [];
+                    
+                    if (recurrenceEverydayCheckbox.checked) {
+                        // Todos os dias (0-6)
+                        for (let i = 0; i < 7; i++) {
+                            recurrenceDays.push(i);
+                        }
+                    } else {
+                        // Dias específicos
+                        recurrenceDayCheckboxes.forEach(checkbox => {
+                            if (checkbox.checked) {
+                                recurrenceDays.push(parseInt(checkbox.value));
+                            }
+                        });
+                    }
+                    
+                    taskData.recurring = true;
+                    taskData.recurrenceDays = recurrenceDays;
+                }
+                
+                // Salva a tarefa (como usuário normal ou admin)
+                const saveFunction = selectedUserId && isUserAdmin
+                    ? saveTaskAsAdmin(selectedUserId, taskData)
+                    : saveTask(taskData);
+                
+                saveTaskBtn.disabled = true;
+                saveTaskBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+                
+                saveFunction
+                    .then(() => {
+                        // Limpa o formulário
+                        taskTitleInput.value = '';
+                        taskDescriptionInput.value = '';
+                        taskStartTimeInput.value = '';
+                        taskEndTimeInput.value = '';
+                        taskPrioritySelect.value = 'normal';
+                        taskCategorySelect.value = 'trabalho';
+                        taskRecurringCheckbox.checked = false;
+                        recurringOptionsDiv.classList.add('hidden');
+                        recurrenceEverydayCheckbox.checked = false;
+                        recurrenceDayCheckboxes.forEach(checkbox => {
+                            checkbox.checked = false;
+                            checkbox.disabled = false;
+                        });
+                        
+                        // Recarrega as tarefas
+                        loadTasksForCurrentDate();
+                        
+                        saveTaskBtn.disabled = false;
+                        saveTaskBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Tarefa';
+                    })
+                    .catch(error => {
+                        console.error('Erro ao salvar tarefa:', error);
+                        alert('Erro ao salvar tarefa. Tente novamente.');
+                        
+                        saveTaskBtn.disabled = false;
+                        saveTaskBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Tarefa';
+                    });
+            }
+            
+            // Iniciar uma tarefa
+            window.startTask = function(taskId) {
+                const now = new Date();
+                const updateData = {
+                    actualStartTime: formatTime(now),
+                    startedAt: now
+                };
+                
+                const updateFunction = selectedUserId && isUserAdmin
+                    ? updateTaskAsAdmin(selectedUserId, taskId, updateData)
+                    : updateTask(taskId, updateData);
+                
+                updateFunction
+                    .then(() => {
+                        loadTasksForCurrentDate();
+                    })
+                    .catch(error => {
+                        console.error('Erro ao iniciar tarefa:', error);
+                        alert('Erro ao iniciar tarefa. Tente novamente.');
+                    });
+            };
+            
+            // Finalizar uma tarefa
+            window.finishTask = function(taskId) {
+                const now = new Date();
+                const updateData = {
+                    actualEndTime: formatTime(now),
+                    finishedAt: now,
+                    completed: true
+                };
+                
+                const updateFunction = selectedUserId && isUserAdmin
+                    ? updateTaskAsAdmin(selectedUserId, taskId, updateData)
+                    : updateTask(taskId, updateData);
+                
+                updateFunction
+                    .then(() => {
+                        loadTasksForCurrentDate();
+                    })
+                    .catch(error => {
+                        console.error('Erro ao finalizar tarefa:', error);
+                        alert('Erro ao finalizar tarefa. Tente novamente.');
+                    });
+            };
+            
+            // Mostrar comentários de uma tarefa
+            window.showComments = function(taskId) {
+                selectedTaskId = taskId;
+                
+                commentsContainer.innerHTML = '<div class="loading"><div class="loading-spinner"></div></div>';
+                commentModal.classList.remove('hidden');
+                
+                const getCommentsFunction = selectedUserId && isUserAdmin
+                    ? getCommentsAsAdmin(selectedUserId, taskId)
+                    : getComments(taskId);
+                
+                getCommentsFunction
+                    .then(comments => {
+                        renderComments(comments);
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar comentários:', error);
+                        commentsContainer.innerHTML = '<p class="text-red-500">Erro ao carregar comentários. Tente novamente.</p>';
+                    });
+            };
+            
+            // Renderiza os comentários
+            function renderComments(comments) {
+                if (comments.length === 0) {
+                    commentsContainer.innerHTML = `
+                        <div class="text-center py-4">
+                            <i class="far fa-comment-alt text-gray-300 text-3xl mb-2"></i>
+                            <p class="text-gray-500">Nenhum comentário ainda.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                
+                comments.forEach(comment => {
+                    const date = comment.createdAt ? comment.createdAt.toDate() : new Date();
+                    const formattedDate = formatarDataHora(date);
+                    
+                    html += `
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <div class="comment-author">${comment.author || 'Anônimo'}</div>
+                                <div class="comment-time">${formattedDate}</div>
+                            </div>
+                            <div class="comment-text">${comment.text || ''}</div>
+                            ${comment.imageUrl ? `<img src="${comment.imageUrl}" alt="Imagem do comentário" class="comment-image">` : ''}
+                        </div>
+                    `;
+                });
+                
+                commentsContainer.innerHTML = html;
+            }
+            
+            // Adiciona um novo comentário
+            function addNewComment() {
+                if (!selectedTaskId) return;
+                
+                const text = newCommentText.value.trim();
+                if (!text && !selectedImageFile) {
+                    alert('Por favor, digite um comentário ou adicione uma imagem.');
+                    return;
+                }
+                
+                addCommentBtn.disabled = true;
+                addCommentBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adicionando...';
+                
+                const commentData = { text };
+                
+                // Se houver uma imagem, faz o upload primeiro
+                const saveComment = () => {
+                    const addCommentFunction = selectedUserId && isUserAdmin
+                        ? addCommentAsAdmin(selectedUserId, selectedTaskId, commentData)
+                        : addComment(selectedTaskId, commentData);
+                    
+                    addCommentFunction
+                        .then(() => {
+                            // Limpa o formulário
+                            newCommentText.value = '';
+                            selectedImageFile = null;
+                            selectedImageName.textContent = '';
+                            imagePreview.classList.add('hidden');
+                            commentImageInput.value = '';
+                            
+                            // Recarrega os comentários
+                            return showComments(selectedTaskId);
+                        })
+                        .finally(() => {
+                            addCommentBtn.disabled = false;
+                            addCommentBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Adicionar Comentário';
+                        });
+                };
+                
+                if (selectedImageFile) {
+                    uploadImage(selectedImageFile)
+                        .then(url => {
+                            commentData.imageUrl = url;
+                            saveComment();
+                        })
+                        .catch(error => {
+                            console.error('Erro ao fazer upload da imagem:', error);
+                            alert('Erro ao fazer upload da imagem. Tente novamente.');
+                            addCommentBtn.disabled = false;
+                            addCommentBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Adicionar Comentário';
+                        });
+                } else {
+                    saveComment();
+                }
+            }
+            
+            // Mostra a tela de login
+            function showLoginScreen() {
+                loginScreen.classList.remove('hidden');
+                registerScreen.classList.add('hidden');
+                appScreen.classList.add('hidden');
+                
+                // Limpa formulários
+                document.getElementById('email').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('remember-me').checked = false;
+                loginError.classList.add('hidden');
+                
+                document.getElementById('reg-name').value = '';
+                document.getElementById('reg-email').value = '';
+                document.getElementById('reg-password').value = '';
+                document.getElementById('reg-confirm-password').value = '';
+                registerError.classList.add('hidden');
+            }
+            
+            // Mostra a tela principal do app
+            function showAppScreen() {
+                loginScreen.classList.add('hidden');
+                registerScreen.classList.add('hidden');
+                appScreen.classList.remove('hidden');
+            }
+            
+            // Utilitários
+            
+            // Obtém a classe CSS para a prioridade
+            function getPriorityClass(priority) {
+                switch (priority) {
+                    case 'critical': return 'task-priority-critical';
+                    case 'attention': return 'task-priority-attention';
+                    case 'normal': return 'task-priority-normal';
+                    default: return 'task-priority-normal';
+                }
+            }
+            
+            // Formata uma data para exibição (quinta-feira, 1 de maio de 2025)
+            function formatarData(data) {
+                const diaSemana = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
+                const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+                
+                const dia = data.getDate();
+                const mes = meses[data.getMonth()];
+                const ano = data.getFullYear();
+                const nomeDiaSemana = diaSemana[data.getDay()];
+                
+                return `${nomeDiaSemana}, ${dia} de ${mes} de ${ano}`;
+            }
+            
+            // Formata uma data curta (1 mai)
+            function formatarDataCurta(data) {
+                const dia = data.getDate();
+                const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+                const mes = meses[data.getMonth()];
+                
+                return `${dia} ${mes}`;
+            }
+            
+            // Formata data e hora (01/05/2025 15:30)
+            function formatarDataHora(data) {
+                const dia = String(data.getDate()).padStart(2, '0');
+                const mes = String(data.getMonth() + 1).padStart(2, '0');
+                const ano = data.getFullYear();
+                const hora = String(data.getHours()).padStart(2, '0');
+                const minuto = String(data.getMinutes()).padStart(2, '0');
+                
+                return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
+            }
+            
+            // Formata horário (15:30)
+            function formatTime(data) {
+                const hora = String(data.getHours()).padStart(2, '0');
+                const minuto = String(data.getMinutes()).padStart(2, '0');
+                
+                return `${hora}:${minuto}`;
+            }
+            
+            // Verifica se duas datas são o mesmo dia
+            function isSameDay(date1, date2) {
+                return date1.getDate() === date2.getDate() &&
+                       date1.getMonth() === date2.getMonth() &&
+                       date1.getFullYear() === date2.getFullYear();
+            }
+            
+            // Retorna o nome do dia da semana
+            function getDayName(day) {
+                const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+                return days[day];
+            }
+            
+            // Traduz mensagens de erro do Firebase
+            function traduzErroFirebase(codigo) {
+                const mensagens = {
+                    'auth/email-already-in-use': 'Este email já está sendo usado por outra conta.',
+                    'auth/invalid-email': 'O email informado não é válido.',
+                    'auth/weak-password': 'A senha deve ter pelo menos 6 caracteres.',
+                    'auth/user-not-found': 'Usuário não encontrado.',
+                    'auth/wrong-password': 'Senha incorreta.',
+                    'auth/too-many-requests': 'Muitas tentativas. Tente novamente mais tarde.',
+                    'auth/network-request-failed': 'Erro de conexão. Verifique sua internet.'
+                };
+                
+                return mensagens[codigo] || 'Ocorreu um erro. Tente novamente.';
+            }
+            
+            // Inicializa o aplicativo
+            initApp();
+        });
+    </script>
+</body>
+</html>
