@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/_@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 </head>
 
-    <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-lg p-6">  
+    <!-- <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-lg p-6">  --> 
 
     <style>
         /* Reset e estilos base */
@@ -1792,30 +1792,5 @@
     </script>
 
 
-        </div>
-       
-    
-    <script>
-        document.getElementById('selectAllBtn').addEventListener('click', function() {
-            const sourceCode = document.getElementById('sourceCode');
-            sourceCode.select();
-            sourceCode.setSelectionRange(0, 99999); // Para dispositivos móveis
-            document.execCommand('copy');
-            alert('Código copiado para a área de transferência!');
-        });
-        
-        document.getElementById('downloadBtn').addEventListener('click', function() {
-            const sourceCode = document.getElementById('sourceCode').value;
-            const blob = new Blob([sourceCode], {type: 'text/html'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'agenda_diaria.html';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
-    </script>
 </body>
 </html>
