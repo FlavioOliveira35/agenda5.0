@@ -525,6 +525,15 @@
         }
 
         /* Estilos para Visualização Horizontal (Tabela) */
+        .week-view-container.week-view-horizontal { /* Aplicar ao container */
+            margin-left: calc(-50vw + 50%); /* Centraliza e permite expandir */
+            margin-right: calc(-50vw + 50%);
+            padding-left: 1rem; /* Adiciona padding para compensar a margem negativa em telas menores */
+            padding-right: 1rem;
+            max-width: none; /* Remove o max-width do pai .content */
+            width: 100vw; /* Ocupa a largura da viewport */
+            box-sizing: border-box;
+        }
         .week-view-horizontal table {
             width: 100%;
             border-collapse: collapse;
@@ -573,7 +582,11 @@
         }
         .week-view-horizontal td[colspan] { /* Célula container das tarefas do dia */
             padding: 0; /* Remover padding para que os blocos possam preencher */
-            height: 60px; /* Altura base para cada linha de dia, pode ser ajustada */
+            /* A altura pode ser definida para acomodar uma linha de blocos + um pouco de margem */
+            /* Ex: Se o bloco tem 28px + 2px de top + 2px de bottom margin = ~32px */
+            /* Vamos manter uma altura mínima para consistência visual, mesmo se vazia. */
+            min-height: 35px;
+            height: 35px; /* Altura fixa para a "pista" de tarefas */
         }
         .week-view-horizontal .task-block { /* Estilo base para os blocos de tarefa */
             position: absolute;
@@ -1622,6 +1635,27 @@
                 return;
             }
 
+            // Validação de Sobreposição de Horário
+            const newTaskDateStr = formatDate(editingTaskId ? (tasks.find(t => t.id === editingTaskId)?.date || new Date(currentDate)) : new Date(currentDate));
+            const newTaskStartMinutes = parseInt(startTime.split(':')[0]) * 60 + parseInt(startTime.split(':')[1]);
+            const newTaskEndMinutes = parseInt(endTime.split(':')[0]) * 60 + parseInt(endTime.split(':')[1]);
+
+            for (const existingTask of tasks) {
+                if (editingTaskId === existingTask.id) continue; // Não comparar com a própria tarefa ao editar
+
+                const existingTaskDateStr = formatDate(existingTask.date);
+                if (newTaskDateStr === existingTaskDateStr) {
+                    const existingTaskStartMinutes = parseInt(existingTask.startTime.split(':')[0]) * 60 + parseInt(existingTask.startTime.split(':')[1]);
+                    const existingTaskEndMinutes = parseInt(existingTask.endTime.split(':')[0]) * 60 + parseInt(existingTask.endTime.split(':')[1]);
+
+                    // Verifica sobreposição: (StartA < EndB) and (EndA > StartB)
+                    if (newTaskStartMinutes < existingTaskEndMinutes && newTaskEndMinutes > existingTaskStartMinutes) {
+                        alert(`Erro: O horário desta tarefa (${startTime} - ${endTime}) sobrepõe a tarefa existente "${existingTask.title}" (${existingTask.startTime} - ${existingTask.endTime}) no mesmo dia. Ajuste os horários.`);
+                        return; // Impede o salvamento
+                    }
+                }
+            }
+
             let recurrenceType = null;
             let recurringDays = null;
             if (recurrent) {
@@ -2108,8 +2142,16 @@
 
         function renderWeekViewVertical(firstDayOfWeekDate) {
              // Lógica existente da renderWeekView, agora em sua própria função
-            weekViewContainer.classList.remove('week-view-horizontal'); // Garante que não tem a classe horizontal
-            weekViewContainer.style.display = 'grid'; // Restaura display grid padrão se alterado
+            weekViewContainer.classList.remove('week-view-horizontal');
+            weekViewContainer.style.display = 'grid';
+            // Resetar estilos de largura/margem que podem ter sido aplicados pela visualização horizontal
+            weekViewContainer.style.marginLeft = '';
+            weekViewContainer.style.marginRight = '';
+            weekViewContainer.style.paddingLeft = '';
+            weekViewContainer.style.paddingRight = '';
+            weekViewContainer.style.width = '';
+            weekViewContainer.style.maxWidth = '';
+
 
             for (let i = 0; i < 7; i++) {
                 const date = new Date(firstDayOfWeekDate);
@@ -2160,7 +2202,7 @@
 
         function renderWeekViewHorizontal(firstDayOfWeekDate) {
             // Implementação da visualização horizontal (Estilo Planner)
-            weekViewContainer.classList.add('week-view-horizontal');
+            weekViewContainer.classList.add('week-view-horizontal'); // Classe para aplicar o estilo de largura total
             weekViewContainer.style.display = 'block';
             weekViewContainer.innerHTML = ''; // Limpar conteúdo anterior
 
@@ -2208,11 +2250,10 @@
 
                 // Renderizar tarefas para este dia
                 const dayTasks = tasks.filter(t => t.date && formatDate(t.date) === formatDate(dayDate));
-                dayTasks.sort((a, b) => a.startTime.localeCompare(b.startTime)); // Ordenar por hora de início
+                dayTasks.sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-                let taskBlockTopOffset = 2; // Offset inicial do topo em pixels
-                const taskBlockHeight = 28; // Altura do bloco, conforme CSS
-                const taskBlockMargin = 2;  // Margem vertical entre blocos sobrepostos
+                // Com a validação de não sobreposição, todas as tarefas ficam na mesma "pista" horizontal.
+                const fixedTopPosition = "2px"; // Posição vertical fixa para os blocos de tarefa.
 
                 dayTasks.forEach(task => {
                     const taskBlock = document.createElement('div');
@@ -2225,9 +2266,7 @@
                     taskBlock.style.left = styleProps.left;
                     taskBlock.style.width = styleProps.width;
                     taskBlock.style.display = styleProps.display;
-                    taskBlock.style.top = `${taskBlockTopOffset}px`;
-
-                    taskBlockTopOffset += taskBlockHeight + taskBlockMargin; // Incrementar para a próxima tarefa
+                    taskBlock.style.top = fixedTopPosition;
 
                     taskBlock.addEventListener('click', () => {
                         currentDate = new Date(dayDate);
