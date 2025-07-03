@@ -1196,6 +1196,28 @@
         }
 
 
+        // Funções para controle da visualização da semana
+        function getWeekViewMode() {
+            return localStorage.getItem('weekViewMode') || 'vertical'; // Padrão para vertical
+        }
+
+        function updateWeekViewToggleBtn(mode) {
+            if (!weekViewToggleText || !weekViewToggleIcon) return; // Guard clause
+            if (mode === 'horizontal') {
+                weekViewToggleText.textContent = 'Vertical';
+                weekViewToggleIcon.innerHTML = '<path d="M10 4H6v16h4V4zm6 0h-4v16h4V4z"/>'; // Ícone para Vertical (colunas)
+            } else { // vertical
+                weekViewToggleText.textContent = 'Horizontal';
+                weekViewToggleIcon.innerHTML = '<path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>'; // Ícone para Horizontal (linhas)
+            }
+        }
+
+        function setWeekViewMode(mode) {
+            localStorage.setItem('weekViewMode', mode);
+            updateWeekViewToggleBtn(mode);
+        }
+        // Fim das funções para controle da visualização da semana
+
         // Funções principais
         function setupEventListeners() {
             prevDayBtn.addEventListener('click', () => {
