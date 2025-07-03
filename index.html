@@ -5,8 +5,9 @@
     <title>Agenda Diária 5.0 - Planejamento Moderno</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/_@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <!-- Removido o link antigo do FontAwesome -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
@@ -624,10 +625,17 @@
         .week-view-horizontal .task-block:hover {
             opacity: 0.85;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra mais pronunciada no hover */
+            /* A cor de fundo virá da classe de status */
         }
-        .week-view-horizontal .task-block.priority-critical { background-color: #6A1B9A; /* Roxo */ }
-        .week-view-horizontal .task-block.priority-attention { background-color: #3F51B5; /* Azul */ }
-        .week-view-horizontal .task-block.priority-normal { background-color: #4CAF50; /* Verde */ }
+        /* Cores de STATUS para os blocos na visualização horizontal */
+        .week-view-horizontal .task-block.status-pending { background-color: #B0BEC5; /* Cinza claro */ }
+        .week-view-horizontal .task-block.status-in-progress { background-color: #4CAF50; /* Verde */ }
+        .week-view-horizontal .task-block.status-completed { background-color: #3F51B5; /* Azul */ }
+        .week-view-horizontal .task-block.status-not-completed { background-color: #FF9800; /* Laranja */ }
+        /* Remover a borda lateral baseada em prioridade para .task-block, pois a cor de fundo já indica status */
+        .week-view-horizontal .task-block {
+            border-left: none !important; /* Remover borda de prioridade, manter borda geral */
+        }
 
 
         /* Relatórios */
@@ -815,9 +823,7 @@
         <div class="header-controls">
             <h1 class="app-title">Agenda Diária</h1>
             <button class="settings-btn" id="settingsBtn">
-                <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
-                </svg>
+                <i class="fas fa-ellipsis-v"></i>
             </button>
             <div class="settings-dropdown hidden" id="settingsDropdown">
                 <button id="retention90days">Retenção: 90 dias</button>
@@ -829,15 +835,11 @@
         </div>
         <div class="date-nav">
             <button class="nav-btn" id="prevDay">
-                <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
-                </svg>
+                <i class="fas fa-chevron-left"></i>
             </button>
             <div class="date-display" id="currentDate">carregando...</div>
             <button class="nav-btn" id="nextDay">
-                <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
-                </svg>
+                <i class="fas fa-chevron-right"></i>
             </button>
         </div>
     </header>
@@ -845,22 +847,13 @@
     <!-- Navegação principal -->
     <nav class="main-nav">
         <div class="nav-tab active" data-tab="agenda">
-            <svg class="icon icon-sm" viewBox="0 0 24 24">
-                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM5 5v2h14V5H5z"></path>
-            </svg>
-            Agenda
+            <i class="fas fa-calendar-day icon-sm"></i> Agenda
         </div>
         <div class="nav-tab" data-tab="semana">
-            <svg class="icon icon-sm" viewBox="0 0 24 24">
-                <path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"></path>
-            </svg>
-            Semana
+            <i class="fas fa-calendar-week icon-sm"></i> Semana
         </div>
         <div class="nav-tab" data-tab="relatorios">
-            <svg class="icon icon-sm" viewBox="0 0 24 24">
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path>
-            </svg>
-            Relatórios
+            <i class="fas fa-chart-pie icon-sm"></i> Relatórios
         </div>
     </nav>
 
@@ -871,9 +864,7 @@
             <div id="tasks-container" class="task-list">
                 <!-- As tarefas serão inseridas aqui dinamicamente -->
                 <div class="alert alert-info">
-                    <svg class="icon alert-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
-                    </svg>
+                    <i class="fas fa-info-circle alert-icon"></i>
                     <div>Nenhuma tarefa para hoje. Adicione uma nova tarefa clicando no botão +</div>
                 </div>
             </div>
@@ -883,9 +874,7 @@
         <section id="semana-section" class="tab-content hidden">
             <div class="view-toggle-container" style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
                 <button id="weekViewToggleBtn" class="btn btn-secondary btn-sm">
-                    <svg class="icon icon-sm btn-icon" id="weekViewToggleIcon" viewBox="0 0 24 24">
-                        <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/> <!-- Ícone para Horizontal (linhas) -->
-                    </svg>
+                    <i class="fas fa-grip-horizontal btn-icon" id="weekViewToggleIcon"></i> <!-- Ícone inicial para Horizontal, será trocado por JS -->
                     <span id="weekViewToggleText">Horizontal</span>
                 </button>
             </div>
@@ -925,9 +914,7 @@
 
     <!-- Botão flutuante de adicionar tarefa -->
     <button class="floating-btn" id="addTaskBtn">
-        <svg class="icon" viewBox="0 0 24 24">
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
-        </svg>
+        <i class="fas fa-plus"></i>
     </button>
 
     <!-- Modal de Adicionar/Editar Tarefa -->
@@ -1013,10 +1000,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="cancelTaskBtn">Cancelar</button>
                     <button type="submit" class="btn btn-primary" id="saveTaskBtn">
-                        <svg class="icon icon-sm btn-icon" viewBox="0 0 24 24">
-                            <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"></path>
-                        </svg>
-                        Salvar
+                        <i class="fas fa-save btn-icon"></i> Salvar
                     </button>
                 </div>
             </form>
@@ -1047,10 +1031,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary" id="addCommentBtn">
-                            <svg class="icon icon-sm btn-icon" viewBox="0 0 24 24">
-                                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"></path>
-                            </svg>
-                            Adicionar Comentário
+                            <i class="fas fa-comment-dots btn-icon"></i> Adicionar Comentário
                         </button>
                     </div>
                 </form>
@@ -1269,13 +1250,13 @@
         }
 
         function updateWeekViewToggleBtn(mode) {
-            if (!weekViewToggleText || !weekViewToggleIcon) return; // Guard clause
+            if (!weekViewToggleText || !weekViewToggleIcon) return;
             if (mode === 'horizontal') {
                 weekViewToggleText.textContent = 'Vertical';
-                weekViewToggleIcon.innerHTML = '<path d="M10 4H6v16h4V4zm6 0h-4v16h4V4z"/>'; // Ícone para Vertical (colunas)
+                weekViewToggleIcon.className = 'fas fa-grip-lines-vertical btn-icon';
             } else { // vertical
                 weekViewToggleText.textContent = 'Horizontal';
-                weekViewToggleIcon.innerHTML = '<path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>'; // Ícone para Horizontal (linhas)
+                weekViewToggleIcon.className = 'fas fa-grip-horizontal btn-icon';
             }
         }
 
@@ -2053,16 +2034,12 @@
                 else if (isNotCompleted) statusIcon = `<span class="badge badge-warning">Não Concluída</span>`;
                 else if (isInProgress) statusIcon = `<span class="badge badge-primary">Em andamento</span>`;
 
-                let recurrentIcon = (task.recurrent || task.parentTaskId) ? `
-                    <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-left: 8px; color: #6a3093;">
-                        <path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"></path>
-                    </svg>` : '';
+                let recurrentIcon = (task.recurrent || task.parentTaskId) ?
+                    `<i class="fas fa-sync-alt icon-sm" style="margin-left: 8px; color: #6a3093;" title="Tarefa Recorrente"></i>` : '';
 
                 let commentsIndicator = (task.comments && task.comments.length > 0) ? `
-                    <span class="badge badge-primary" style="margin-left: 8px;">
-                        <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right: 2px;">
-                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"></path>
-                        </svg> ${task.comments.length}
+                    <span class="badge badge-primary" style="margin-left: 8px;" title="Comentários">
+                        <i class="fas fa-comment-alt icon-sm" style="margin-right: 2px;"></i> ${task.comments.length}
                     </span>` : '';
 
                 let realTimeInfo = '';
@@ -2091,18 +2068,18 @@
                     <div class="task-actions">
                         <div class="task-action-buttons">
                             ${!isTaskPast && !isCompleted && !isNotCompleted ? `
-                                ${!isInProgress ? `<button class="btn btn-secondary btn-sm start-task-btn"><svg class="icon icon-sm btn-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>Iniciar</button>` : ''}
+                                ${!isInProgress ? `<button class="btn btn-secondary btn-sm start-task-btn"><i class="fas fa-play btn-icon"></i>Iniciar</button>` : ''}
                                 ${isInProgress ? `
-                                    <button class="btn btn-success btn-sm finish-task-btn"><svg class="icon icon-sm btn-icon" viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>Finalizar</button>
-                                    <button class="btn btn-warning btn-sm not-completed-task-btn" style="margin-left: 5px;"><svg class="icon icon-sm btn-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z"/></svg>Não Concluído</button>
+                                    <button class="btn btn-success btn-sm finish-task-btn"><i class="fas fa-check-circle btn-icon"></i>Finalizar</button>
+                                    <button class="btn btn-warning btn-sm not-completed-task-btn" style="margin-left: 5px;"><i class="fas fa-times-circle btn-icon"></i>Não Concluído</button>
                                 ` : ''}
                             ` : ''}
-                            <button class="btn btn-secondary btn-sm comments-btn"><svg class="icon icon-sm btn-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"></path></svg>Comentários</button>
+                            <button class="btn btn-secondary btn-sm comments-btn"><i class="fas fa-comments btn-icon"></i>Comentários</button>
                         </div>
                         <div class="task-management">
                             ${canEditOrDelete ? `
-                                <button class="btn btn-secondary btn-sm edit-task-btn"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg></button>
-                                <button class="btn btn-danger btn-sm delete-task-btn"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg></button>
+                                <button class="btn btn-secondary btn-sm edit-task-btn"><i class="fas fa-pencil-alt btn-icon"></i></button>
+                                <button class="btn btn-danger btn-sm delete-task-btn"><i class="fas fa-trash-alt btn-icon"></i></button>
                             ` : ''}
                             ${'' /* Removido: ${isCompleted ? `<div class="task-status-buttons"><button class="btn btn-success btn-sm task-ok-btn">OK</button><button class="btn btn-danger btn-sm task-nok-btn">NOK</button></div>` : ''} */}
                         </div>
@@ -2280,9 +2257,10 @@
 
                 dayTasks.forEach(task => {
                     const taskBlock = document.createElement('div');
-                    taskBlock.className = `task-block priority-${task.priority}`;
-                    taskBlock.textContent = `${formatTime(task.startTime)} ${task.title}`;
-                    taskBlock.title = `${task.title} (${formatTime(task.startTime)} - ${formatTime(task.endTime)})`;
+                    // Aplicar classe de status para cor de fundo, e manter a de prioridade para outros possíveis estilos (ex: tooltip avançado)
+                    taskBlock.className = `task-block status-${task.status || 'pending'} priority-${task.priority}`;
+                    // taskBlock.textContent = ''; // Remover texto interno
+                    taskBlock.title = `${task.title} (${formatTime(task.startTime)} - ${formatTime(task.endTime)}) [Status: ${task.status || 'Pendente'}, Prioridade: ${task.priority}]`; // Tooltip mais informativo
 
                     const styleProps = getTaskBlockStyle(task);
 
