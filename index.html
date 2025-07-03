@@ -524,6 +524,51 @@
             background-color: rgba(46, 204, 113, 0.1);
         }
 
+        /* Estilos para Visualização Horizontal (Tabela) */
+        .week-view-horizontal table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* Para colunas de largura igual */
+        }
+        .week-view-horizontal th, .week-view-horizontal td {
+            border: 1px solid #e0e0e0;
+            padding: 0.75rem;
+            text-align: left;
+            vertical-align: top;
+            font-size: 0.85rem;
+        }
+        .week-view-horizontal th {
+            background-color: #f9f9f9;
+            color: #6a3093;
+            font-weight: 600;
+            text-align: center;
+        }
+        .week-view-horizontal .horizontal-task-item {
+            background-color: #f9f9f9;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.3rem;
+            font-size: 0.8rem;
+            border-left: 3px solid #ccc; /* Cor padrão */
+        }
+        .week-view-horizontal .horizontal-task-item.priority-critical { border-left-color: #e74c3c; background-color: rgba(231, 76, 60, 0.05); }
+        .week-view-horizontal .horizontal-task-item.priority-attention { border-left-color: #f39c12; background-color: rgba(243, 156, 18, 0.05); }
+        .week-view-horizontal .horizontal-task-item.priority-normal { border-left-color: #2ecc71; background-color: rgba(46, 204, 113, 0.05); }
+        .week-view-horizontal .task-time-horizontal {
+            font-weight: bold;
+            margin-right: 5px;
+            display: block; /* Para que o título vá para a próxima linha se necessário */
+            font-size: 0.75rem;
+            color: #555;
+        }
+        .week-view-horizontal .task-title-horizontal {
+            display: block;
+        }
+        .week-view-horizontal td {
+            min-height: 80px; /* Altura mínima para as células */
+        }
+
+
         /* Relatórios */
         .stats-grid {
             display: grid;
@@ -625,6 +670,25 @@
 
             .week-day {
                 margin-bottom: 1rem;
+            }
+        }
+
+        function getWeekViewMode() {
+            return localStorage.getItem('weekViewMode') || 'vertical'; // Padrão para vertical
+        }
+
+        function setWeekViewMode(mode) {
+            localStorage.setItem('weekViewMode', mode);
+            updateWeekViewToggleBtn(mode);
+        }
+
+        function updateWeekViewToggleBtn(mode) {
+            if (mode === 'horizontal') {
+                weekViewToggleText.textContent = 'Vertical';
+                weekViewToggleIcon.innerHTML = '<path d="M10 4H6v16h4V4zm6 0h-4v16h4V4z"/>'; // Ícone para Vertical (colunas)
+            } else { // vertical
+                weekViewToggleText.textContent = 'Horizontal';
+                weekViewToggleIcon.innerHTML = '<path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>'; // Ícone para Horizontal (linhas)
             }
         }
 
@@ -756,6 +820,14 @@
 
         <!-- Seção Semana (inicialmente oculta) -->
         <section id="semana-section" class="tab-content hidden">
+            <div class="view-toggle-container" style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+                <button id="weekViewToggleBtn" class="btn btn-secondary btn-sm">
+                    <svg class="icon icon-sm btn-icon" id="weekViewToggleIcon" viewBox="0 0 24 24">
+                        <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/> <!-- Ícone para Horizontal (linhas) -->
+                    </svg>
+                    <span id="weekViewToggleText">Horizontal</span>
+                </button>
+            </div>
             <div class="week-view" id="week-view-container">
                 <!-- Os dias da semana serão inseridos aqui dinamicamente -->
             </div>
@@ -1002,6 +1074,11 @@
         const retentionDefaultBtn = document.getElementById('retentionDefault');
         const deleteAllDataBtn = document.getElementById('deleteAllDataBtn');
 
+        // Elementos do Toggle da Visualização Semanal
+        const weekViewToggleBtn = document.getElementById('weekViewToggleBtn');
+        const weekViewToggleIcon = document.getElementById('weekViewToggleIcon');
+        const weekViewToggleText = document.getElementById('weekViewToggleText');
+
         // Elementos do Modal de Confirmação
         const confirmationModal = document.getElementById('confirmationModal');
         const confirmationModalTitle = document.getElementById('confirmationModalTitle');
@@ -1025,8 +1102,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             updateDateDisplay();
             setupEventListeners();
-            updateRetentionDropdownUI(getDataRetentionDays()); // Atualizar UI do dropdown na carga
-            // A exclusão de dados antigos será chamada dentro de setupFirestoreListener após o primeiro carregamento.
+            updateRetentionDropdownUI(getDataRetentionDays());
+            updateWeekViewToggleBtn(getWeekViewMode()); // Atualizar botão toggle na carga
             setupFirestoreListener();
         });
 
@@ -1122,15 +1199,37 @@
         // Funções principais
         function setupEventListeners() {
             prevDayBtn.addEventListener('click', () => {
-                currentDate.setDate(currentDate.getDate() - 1);
-                updateDateDisplay();
-                renderTasks(); // Re-renderiza tarefas para a nova data
+                const activeTab = document.querySelector('.nav-tab.active')?.dataset.tab;
+                if (activeTab === 'semana') {
+                    currentDate.setDate(currentDate.getDate() - 7);
+                    // Ajustar para a segunda-feira da semana
+                    const dayOfWeek = currentDate.getDay(); // 0 (Dom) - 6 (Sáb)
+                    const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Se Dom, volta 6 dias, senão, vai para Seg
+                    currentDate.setDate(currentDate.getDate() + diffToMonday);
+                    updateDateDisplay();
+                    renderWeekView();
+                } else {
+                    currentDate.setDate(currentDate.getDate() - 1);
+                    updateDateDisplay();
+                    renderTasks();
+                }
             });
 
             nextDayBtn.addEventListener('click', () => {
-                currentDate.setDate(currentDate.getDate() + 1);
-                updateDateDisplay();
-                renderTasks(); // Re-renderiza tarefas para a nova data
+                const activeTab = document.querySelector('.nav-tab.active')?.dataset.tab;
+                if (activeTab === 'semana') {
+                    currentDate.setDate(currentDate.getDate() + 7);
+                     // Ajustar para a segunda-feira da semana
+                    const dayOfWeek = currentDate.getDay();
+                    const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+                    currentDate.setDate(currentDate.getDate() + diffToMonday);
+                    updateDateDisplay();
+                    renderWeekView();
+                } else {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                    updateDateDisplay();
+                    renderTasks();
+                }
             });
 
             navTabs.forEach(tab => {
@@ -1182,6 +1281,13 @@
             retention90daysBtn.addEventListener('click', () => setDataRetention(90));
             retention180daysBtn.addEventListener('click', () => setDataRetention(180));
             deleteAllDataBtn.addEventListener('click', () => confirmDeleteAllData());
+
+            weekViewToggleBtn.addEventListener('click', () => {
+                const currentMode = getWeekViewMode();
+                const newMode = currentMode === 'vertical' ? 'horizontal' : 'vertical';
+                setWeekViewMode(newMode);
+                renderWeekView(); // Re-renderiza a visualização da semana
+            });
 
             // Event listeners do Modal de Confirmação
             closeConfirmationModal.addEventListener('click', () => hideConfirmationModal());
@@ -1252,11 +1358,26 @@
 
 
         function updateDateDisplay() {
-            const day = currentDate.getDate();
-            const month = monthNames[currentDate.getMonth()];
-            const year = currentDate.getFullYear();
-            const weekday = dayNames[currentDate.getDay()];
-            currentDateEl.textContent = `${weekday}, ${day} de ${month} de ${year}`;
+            const activeTab = document.querySelector('.nav-tab.active')?.dataset.tab;
+            if (activeTab === 'semana') {
+                let startOfWeek = new Date(currentDate);
+                const dayOfWeek = startOfWeek.getDay();
+                const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+                startOfWeek.setDate(startOfWeek.getDate() + diffToMonday);
+
+                let endOfWeek = new Date(startOfWeek);
+                endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+                currentDateEl.textContent =
+                    `${startOfWeek.getDate()} de ${monthNames[startOfWeek.getMonth()].substring(0,3)}` +
+                    ` - ${endOfWeek.getDate()} de ${monthNames[endOfWeek.getMonth()].substring(0,3)} de ${endOfWeek.getFullYear()}`;
+            } else {
+                const day = currentDate.getDate();
+                const month = monthNames[currentDate.getMonth()];
+                const year = currentDate.getFullYear();
+                const weekday = dayNames[currentDate.getDay()];
+                currentDateEl.textContent = `${weekday}, ${day} de ${month} de ${year}`;
+            }
         }
 
         function formatDate(date) {
@@ -1889,29 +2010,53 @@
         }
 
         function renderWeekView() {
+            const viewMode = getWeekViewMode();
             weekViewContainer.innerHTML = '';
-            const firstDayOfWeek = new Date(currentDate);
-            firstDayOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+            // Clear previous classes like 'week-view-horizontal'
+            weekViewContainer.className = 'week-view'; // Reset to default class
+
+            // currentDate já deve ser a Segunda-feira da semana a ser exibida (ajustado pelos botões prev/next)
+            // ou o dia atual na primeira carga se a aba semana for selecionada.
+            // Precisamos garantir que firstDayOfWeekComputed seja sempre uma segunda-feira.
+            let firstDayOfWeekComputed = new Date(currentDate);
+            const dayOfWeek = firstDayOfWeekComputed.getDay(); // 0 (Dom) a 6 (Sáb)
+            const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+            firstDayOfWeekComputed.setDate(firstDayOfWeekComputed.getDate() + diffToMonday);
+
+            if (viewMode === 'horizontal') {
+                renderWeekViewHorizontal(firstDayOfWeekComputed);
+            } else {
+                renderWeekViewVertical(firstDayOfWeekComputed);
+            }
+        }
+
+        function renderWeekViewVertical(firstDayOfWeekDate) {
+             // Lógica existente da renderWeekView, agora em sua própria função
+            weekViewContainer.classList.remove('week-view-horizontal'); // Garante que não tem a classe horizontal
+            weekViewContainer.style.display = 'grid'; // Restaura display grid padrão se alterado
 
             for (let i = 0; i < 7; i++) {
-                const date = new Date(firstDayOfWeek);
-                date.setDate(firstDayOfWeek.getDate() + i);
+                const date = new Date(firstDayOfWeekDate);
+                date.setDate(firstDayOfWeekDate.getDate() + i);
                 const dateStr = formatDate(date);
+                // isCurrentDateView pode precisar ser reavaliado ou removido se currentDate é sempre Seg.
                 const isCurrentDateView = date.getDate() === currentDate.getDate() && date.getMonth() === currentDate.getMonth() && date.getFullYear() === currentDate.getFullYear();
+
 
                 const dayTasks = tasks.filter(task => task.date && formatDate(task.date) === dateStr);
                 dayTasks.sort((a, b) => a.startTime.localeCompare(b.startTime));
 
                 const dayEl = document.createElement('div');
-                dayEl.className = 'week-day';
-                if (isCurrentDateView) {
+                dayEl.className = 'week-day'; // Classe padrão para os dias na visualização vertical
+                 if (isCurrentDateView && getWeekViewMode() === 'vertical') { // Só destacar se for a visualização vertical
                     dayEl.style.borderColor = '#6a3093';
                     dayEl.style.borderWidth = '2px';
                 }
 
+
                 dayEl.innerHTML = `
                     <div class="week-day-header">
-                        <div class="day-name">${shortDayNames[i]}</div>
+                        <div class="day-name">${shortDayNames[date.getDay()]}</div>
                         <div class="day-date">${date.getDate()}/${date.getMonth() + 1}</div>
                     </div>
                     <div class="day-tasks">
@@ -1936,6 +2081,68 @@
                 weekViewContainer.appendChild(dayEl);
             }
         }
+
+        function renderWeekViewHorizontal(firstDayOfWeekDate) {
+            // Implementação da visualização horizontal
+            weekViewContainer.classList.add('week-view-horizontal');
+            weekViewContainer.style.display = 'block'; // Mudar de grid para block para a tabela
+
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+            const headerRow = document.createElement('tr');
+
+            // Criar cabeçalhos dos dias da semana
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(firstDayOfWeekDate);
+                date.setDate(firstDayOfWeekDate.getDate() + i);
+                const th = document.createElement('th');
+                th.innerHTML = `${shortDayNames[date.getDay()]} <br> <span style="font-size:0.8em; font-weight:normal;">${date.getDate()}/${date.getMonth() + 1}</span>`;
+                headerRow.appendChild(th);
+            }
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // Criar uma única linha no corpo da tabela para as tarefas de todos os dias
+            const bodyRow = document.createElement('tr');
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(firstDayOfWeekDate);
+                date.setDate(firstDayOfWeekDate.getDate() + i);
+                const dateStr = formatDate(date);
+
+                const td = document.createElement('td');
+                const dayTasks = tasks.filter(task => task.date && formatDate(task.date) === dateStr);
+                dayTasks.sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+                if (dayTasks.length === 0) {
+                    td.innerHTML = '<div style="color: #999; text-align: center; font-size:0.8em;">-</div>';
+                } else {
+                    dayTasks.forEach(task => {
+                        const taskEl = document.createElement('div');
+                        taskEl.className = `horizontal-task-item priority-${task.priority}`;
+                        taskEl.dataset.taskId = task.id;
+                        taskEl.innerHTML = `
+                            <span class="task-time-horizontal">${formatTime(task.startTime)}</span>
+                            <span class="task-title-horizontal">${task.title}</span>
+                        `;
+                        taskEl.addEventListener('click', () => {
+                            currentDate = new Date(date);
+                            updateDateDisplay();
+                            renderTasks();
+                            document.querySelector('.nav-tab[data-tab="agenda"]').click();
+                        });
+                        td.appendChild(taskEl);
+                    });
+                }
+                bodyRow.appendChild(td);
+            }
+            tbody.appendChild(bodyRow);
+            table.appendChild(tbody);
+
+            weekViewContainer.innerHTML = ''; // Limpar placeholder
+            weekViewContainer.appendChild(table);
+        }
+
 
         function updateStatistics() {
             const today = new Date();
