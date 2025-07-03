@@ -172,6 +172,11 @@
             padding: 1rem;
             max-width: 800px;
             margin: 0 auto;
+            transition: max-width 0.3s ease-in-out; /* Para suavizar a transição */
+        }
+
+        body.week-horizontal-view-active .content {
+            max-width: none; /* Permitir que o conteúdo se expanda */
         }
 
         /* Estilo das tarefas */
@@ -1317,17 +1322,19 @@
                     document.getElementById(`${tabId}-section`).classList.remove('hidden');
 
                     if (tabId === 'agenda') {
+                        document.body.classList.remove('week-horizontal-view-active');
                         currentDate = new Date(); // Resetar para data de hoje
                         updateDateDisplay();
                         renderTasks();
                     } else if (tabId === 'semana') {
-                        // Ao mudar para aba semana, garantir que currentDate seja ajustada para Segunda e a view atualizada
+                        // A classe week-horizontal-view-active é gerenciada em renderWeekViewHorizontal/Vertical
                         const dayOfWeek = currentDate.getDay();
                         const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
                         currentDate.setDate(currentDate.getDate() + diffToMonday);
                         updateDateDisplay(); // Atualizar display de data para o intervalo da semana
                         renderWeekView();
                     } else if (tabId === 'relatorios') {
+                        document.body.classList.remove('week-horizontal-view-active');
                         updateStatistics();
                     }
                 });
@@ -2142,6 +2149,7 @@
 
         function renderWeekViewVertical(firstDayOfWeekDate) {
              // Lógica existente da renderWeekView, agora em sua própria função
+            document.body.classList.remove('week-horizontal-view-active'); // Remover classe do body
             weekViewContainer.classList.remove('week-view-horizontal');
             weekViewContainer.style.display = 'grid';
             // Resetar estilos de largura/margem que podem ter sido aplicados pela visualização horizontal
@@ -2202,7 +2210,8 @@
 
         function renderWeekViewHorizontal(firstDayOfWeekDate) {
             // Implementação da visualização horizontal (Estilo Planner)
-            weekViewContainer.classList.add('week-view-horizontal'); // Classe para aplicar o estilo de largura total
+            document.body.classList.add('week-horizontal-view-active'); // Adicionar classe ao body
+            weekViewContainer.classList.add('week-view-horizontal');
             weekViewContainer.style.display = 'block';
             weekViewContainer.innerHTML = ''; // Limpar conteúdo anterior
 
@@ -2234,7 +2243,8 @@
                 // Célula do Dia (Nome e Data)
                 const dayInfoCell = document.createElement('td');
                 dayInfoCell.className = 'day-info-cell';
-                dayInfoCell.innerHTML = `${shortDayNames[dayDate.getDay()]} <br> <span style="font-size:0.9em;">${dayDate.getDate()}/${dayDate.getMonth() + 1}</span>`;
+                // Dia e data lado a lado
+                dayInfoCell.innerHTML = `${shortDayNames[dayDate.getDay()]} ${dayDate.getDate()}/${dayDate.getMonth() + 1}`;
                 dayRow.appendChild(dayInfoCell);
 
                 // Células de Horário para esta linha do dia (onde as tarefas serão colocadas)
