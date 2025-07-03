@@ -1261,8 +1261,21 @@
                     tabContents.forEach(content => content.classList.add('hidden'));
                     const tabId = tab.dataset.tab;
                     document.getElementById(`${tabId}-section`).classList.remove('hidden');
-                    if (tabId === 'semana') renderWeekView();
-                    else if (tabId === 'relatorios') updateStatistics();
+
+                    if (tabId === 'agenda') {
+                        currentDate = new Date(); // Resetar para data de hoje
+                        updateDateDisplay();
+                        renderTasks();
+                    } else if (tabId === 'semana') {
+                        // Ao mudar para aba semana, garantir que currentDate seja ajustada para Segunda e a view atualizada
+                        const dayOfWeek = currentDate.getDay();
+                        const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+                        currentDate.setDate(currentDate.getDate() + diffToMonday);
+                        updateDateDisplay(); // Atualizar display de data para o intervalo da semana
+                        renderWeekView();
+                    } else if (tabId === 'relatorios') {
+                        updateStatistics();
+                    }
                 });
             });
 
