@@ -532,12 +532,12 @@
         }
         .week-view-horizontal th, .week-view-horizontal td {
             border: 1px solid #e0e0e0;
-            padding: 0.75rem;
+            padding: 0.5rem; /* Reduzido para mais espaço para conteúdo */
             text-align: left;
             vertical-align: top;
-            font-size: 0.85rem;
+            font-size: 0.8rem; /* Reduzido para caber mais info */
         }
-        .week-view-horizontal th {
+        .week-view-horizontal th { /* Cabeçalho dos horários e "Dia" */
             background-color: #f9f9f9;
             color: #6a3093;
             font-weight: 600;
@@ -564,9 +564,44 @@
         .week-view-horizontal .task-title-horizontal {
             display: block;
         }
-        .week-view-horizontal td {
-            min-height: 80px; /* Altura mínima para as células */
+        .week-view-horizontal td.day-info-cell { /* Célula com nome do dia/data */
+            width: 100px; /* Largura fixa para a coluna dos dias */
+            min-width: 100px;
+            text-align: center;
+            font-weight: 500;
+            background-color: #fdfdfd;
         }
+        .week-view-horizontal td[colspan] { /* Célula container das tarefas do dia */
+            padding: 0; /* Remover padding para que os blocos possam preencher */
+            height: 60px; /* Altura base para cada linha de dia, pode ser ajustada */
+        }
+        .week-view-horizontal .task-block { /* Estilo base para os blocos de tarefa */
+            position: absolute;
+            height: 28px; /* Altura do bloco de tarefa aumentada ligeiramente */
+            line-height: 24px; /* Para centralizar texto verticalmente se padding permitir */
+            top: 2px; /* Pequeno espaço do topo da célula, pode ser ajustado para sobreposição */
+            background-color: #a29bfe; /* Cor padrão do bloco */
+            color: white;
+            border-radius: 4px; /* Bordas mais arredondadas */
+            padding: 0px 8px; /* Ajustado para melhor aparência com line-height */
+            font-size: 0.75em; /* Aumentado para legibilidade */
+            font-weight: 500;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            box-sizing: border-box;
+            border: 1px solid rgba(0,0,0,0.2); /* Borda um pouco mais escura */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Sombra sutil */
+            z-index: 5; /* Para sobrepor linhas de grade e outros elementos */
+            cursor: pointer;
+        }
+        .week-view-horizontal .task-block:hover {
+            opacity: 0.85;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        .week-view-horizontal .task-block.priority-critical { background-color: #e74c3c; }
+        .week-view-horizontal .task-block.priority-attention { background-color: #f39c12; }
+        .week-view-horizontal .task-block.priority-normal { background-color: #2ecc71; }
 
 
         /* Relatórios */
@@ -1032,6 +1067,12 @@
         let currentDate = new Date();
         let tasks = [];
         let editingTaskId = null;
+
+        // Constantes para a Grade Horizontal da Semana
+        const HORIZONTAL_VIEW_START_HOUR = 5; // 5:00
+        const HORIZONTAL_VIEW_END_HOUR = 22; // até 22:00 (exclusive, então a última coluna será 21:00-22:00)
+        const HOUR_COLUMN_COUNT = HORIZONTAL_VIEW_END_HOUR - HORIZONTAL_VIEW_START_HOUR;
+
 
         // Elementos DOM
         const currentDateEl = document.getElementById('currentDate');
@@ -2118,64 +2159,131 @@
         }
 
         function renderWeekViewHorizontal(firstDayOfWeekDate) {
-            // Implementação da visualização horizontal
+            // Implementação da visualização horizontal (Estilo Planner)
             weekViewContainer.classList.add('week-view-horizontal');
-            weekViewContainer.style.display = 'block'; // Mudar de grid para block para a tabela
+            weekViewContainer.style.display = 'block';
+            weekViewContainer.innerHTML = ''; // Limpar conteúdo anterior
 
             const table = document.createElement('table');
             const thead = document.createElement('thead');
             const tbody = document.createElement('tbody');
-            const headerRow = document.createElement('tr');
 
-            // Criar cabeçalhos dos dias da semana
-            for (let i = 0; i < 7; i++) {
-                const date = new Date(firstDayOfWeekDate);
-                date.setDate(firstDayOfWeekDate.getDate() + i);
+            // 1. Criar Cabeçalho da Tabela (Horários)
+            const headerRow = document.createElement('tr');
+            const firstHeaderCell = document.createElement('th');
+            firstHeaderCell.textContent = 'Dia'; // Ou pode ser vazio
+            headerRow.appendChild(firstHeaderCell);
+
+            for (let hour = HORIZONTAL_VIEW_START_HOUR; hour < HORIZONTAL_VIEW_END_HOUR; hour++) {
                 const th = document.createElement('th');
-                th.innerHTML = `${shortDayNames[date.getDay()]} <br> <span style="font-size:0.8em; font-weight:normal;">${date.getDate()}/${date.getMonth() + 1}</span>`;
+                th.textContent = `${hour.toString().padStart(2, '0')}:00`;
                 headerRow.appendChild(th);
             }
             thead.appendChild(headerRow);
             table.appendChild(thead);
 
-            // Criar uma única linha no corpo da tabela para as tarefas de todos os dias
-            const bodyRow = document.createElement('tr');
+            // 2. Criar Linhas para Cada Dia da Semana
             for (let i = 0; i < 7; i++) {
-                const date = new Date(firstDayOfWeekDate);
-                date.setDate(firstDayOfWeekDate.getDate() + i);
-                const dateStr = formatDate(date);
+                const dayDate = new Date(firstDayOfWeekDate);
+                dayDate.setDate(firstDayOfWeekDate.getDate() + i);
 
-                const td = document.createElement('td');
-                const dayTasks = tasks.filter(task => task.date && formatDate(task.date) === dateStr);
-                dayTasks.sort((a, b) => a.startTime.localeCompare(b.startTime));
+                const dayRow = document.createElement('tr');
 
-                if (dayTasks.length === 0) {
-                    td.innerHTML = '<div style="color: #999; text-align: center; font-size:0.8em;">-</div>';
-                } else {
-                    dayTasks.forEach(task => {
-                        const taskEl = document.createElement('div');
-                        taskEl.className = `horizontal-task-item priority-${task.priority}`;
-                        taskEl.dataset.taskId = task.id;
-                        taskEl.innerHTML = `
-                            <span class="task-time-horizontal">${formatTime(task.startTime)}</span>
-                            <span class="task-title-horizontal">${task.title}</span>
-                        `;
-                        taskEl.addEventListener('click', () => {
-                            currentDate = new Date(date);
-                            updateDateDisplay();
-                            renderTasks();
-                            document.querySelector('.nav-tab[data-tab="agenda"]').click();
-                        });
-                        td.appendChild(taskEl);
+                // Célula do Dia (Nome e Data)
+                const dayInfoCell = document.createElement('td');
+                dayInfoCell.className = 'day-info-cell';
+                dayInfoCell.innerHTML = `${shortDayNames[dayDate.getDay()]} <br> <span style="font-size:0.9em;">${dayDate.getDate()}/${dayDate.getMonth() + 1}</span>`;
+                dayRow.appendChild(dayInfoCell);
+
+                // Células de Horário para esta linha do dia (onde as tarefas serão colocadas)
+                // Estas células servirão de base, mas as tarefas serão posicionadas absolutamente sobre uma área que representa o dia inteiro.
+                // Para simplificar a estrutura inicial, vamos criar um container para as tarefas do dia que abrange todas as horas.
+                const tasksContainerCell = document.createElement('td');
+                tasksContainerCell.colSpan = HOUR_COLUMN_COUNT; // Faz esta célula ocupar todas as colunas de horário
+                tasksContainerCell.style.position = 'relative'; // Para posicionamento absoluto dos blocos de tarefa
+                tasksContainerCell.dataset.dayDateStr = formatDate(dayDate); // Para identificar a célula depois
+
+                // Adicionar sub-células visuais para as horas (opcional, para linhas de grade)
+                // Ou deixar que os blocos de tarefa definam a grade visualmente.
+
+                // Renderizar tarefas para este dia
+                const dayTasks = tasks.filter(t => t.date && formatDate(t.date) === formatDate(dayDate));
+                dayTasks.sort((a, b) => a.startTime.localeCompare(b.startTime)); // Ordenar por hora de início
+
+                let taskBlockTopOffset = 2; // Offset inicial do topo em pixels
+                const taskBlockHeight = 28; // Altura do bloco, conforme CSS
+                const taskBlockMargin = 2;  // Margem vertical entre blocos sobrepostos
+
+                dayTasks.forEach(task => {
+                    const taskBlock = document.createElement('div');
+                    taskBlock.className = `task-block priority-${task.priority}`;
+                    taskBlock.textContent = `${formatTime(task.startTime)} ${task.title}`;
+                    taskBlock.title = `${task.title} (${formatTime(task.startTime)} - ${formatTime(task.endTime)})`;
+
+                    const styleProps = getTaskBlockStyle(task);
+
+                    taskBlock.style.left = styleProps.left;
+                    taskBlock.style.width = styleProps.width;
+                    taskBlock.style.display = styleProps.display;
+                    taskBlock.style.top = `${taskBlockTopOffset}px`;
+
+                    taskBlockTopOffset += taskBlockHeight + taskBlockMargin; // Incrementar para a próxima tarefa
+
+                    taskBlock.addEventListener('click', () => {
+                        currentDate = new Date(dayDate);
+                        updateDateDisplay();
+                        renderTasks();
+                        document.querySelector('.nav-tab[data-tab="agenda"]').click();
                     });
-                }
-                bodyRow.appendChild(td);
-            }
-            tbody.appendChild(bodyRow);
-            table.appendChild(tbody);
 
-            weekViewContainer.innerHTML = ''; // Limpar placeholder
+                    tasksContainerCell.appendChild(taskBlock);
+                });
+
+
+                dayRow.appendChild(tasksContainerCell);
+                tbody.appendChild(dayRow);
+            }
+
+            table.appendChild(tbody);
             weekViewContainer.appendChild(table);
+        }
+
+        function getTaskBlockStyle(task) { // Removido dayTasksContainerWidth
+            const taskStart = new Date(`2000-01-01T${task.startTime}`);
+            const taskEnd = new Date(`2000-01-01T${task.endTime}`);
+
+            const gridStartTime = new Date(`2000-01-01T${HORIZONTAL_VIEW_START_HOUR.toString().padStart(2, '0')}:00`);
+            const gridEndTime = new Date(`2000-01-01T${HORIZONTAL_VIEW_END_HOUR.toString().padStart(2, '0')}:00`);
+
+            // Converter para minutos desde o início do dia para facilitar o cálculo
+            const taskStartMinutes = taskStart.getHours() * 60 + taskStart.getMinutes();
+            const taskEndMinutes = taskEnd.getHours() * 60 + taskEnd.getMinutes();
+            const gridStartMinutes = gridStartTime.getHours() * 60 + gridStartTime.getMinutes();
+            const gridEndMinutes = gridEndTime.getHours() * 60 + gridEndTime.getMinutes();
+
+            const totalGridMinutes = gridEndMinutes - gridStartMinutes;
+            if (totalGridMinutes <= 0) return { left: '0px', width: '0px', display: 'none' }; // Evitar divisão por zero
+
+            // Calcular o início e o fim da tarefa, limitados pela grade visível
+            const effectiveStartMinutes = Math.max(taskStartMinutes, gridStartMinutes);
+            const effectiveEndMinutes = Math.min(taskEndMinutes, gridEndMinutes);
+
+            if (effectiveStartMinutes >= effectiveEndMinutes) { // Tarefa fora da grade visível
+                return { left: '0px', width: '0px', display: 'none' };
+            }
+
+            const leftOffsetMinutes = effectiveStartMinutes - gridStartMinutes;
+            const durationMinutesInGrid = effectiveEndMinutes - effectiveStartMinutes;
+
+            const leftPercentage = (leftOffsetMinutes / totalGridMinutes) * 100;
+            const widthPercentage = (durationMinutesInGrid / totalGridMinutes) * 100;
+
+            // Usar porcentagens para left e width em relação ao tasksContainerCell
+            return {
+                left: `${leftPercentage}%`,
+                width: `${widthPercentage}%`,
+                display: 'block' // Garantir que seja visível
+            };
         }
 
 
