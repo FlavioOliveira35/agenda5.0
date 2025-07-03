@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Agenda Diária 5.0 - Planejamento Moderno</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/_@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 
-    <!-- <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-lg p-6">  --> 
+    <!-- <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-lg p-6">  -->
 
     <style>
         /* Reset e estilos base */
@@ -18,13 +20,13 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background-color: #f8f7fa;
             color: #333;
             line-height: 1.6;
         }
-        
+
         /* Cabeçalho */
         .app-header {
             background: linear-gradient(135deg, #8a4baf 0%, #6a3093 100%);
@@ -35,28 +37,28 @@
             top: 0;
             z-index: 100;
         }
-        
+
         .app-title {
             text-align: center;
             font-size: 1.5rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
         }
-        
+
         .date-nav {
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 0.5rem;
         }
-        
+
         .date-display {
             font-size: 1.2rem;
             margin: 0 1rem;
             min-width: 200px;
             text-align: center;
         }
-        
+
         .nav-btn {
             background-color: rgba(255, 255, 255, 0.2);
             border: none;
@@ -70,18 +72,18 @@
             justify-content: center;
             transition: background-color 0.2s;
         }
-        
+
         .nav-btn:hover {
             background-color: rgba(255, 255, 255, 0.3);
         }
-        
+
         /* Navegação principal */
         .main-nav {
             display: flex;
             border-bottom: 1px solid #e0e0e0;
             background-color: white;
         }
-        
+
         .nav-tab {
             flex: 1;
             text-align: center;
@@ -91,28 +93,28 @@
             color: #666;
             font-weight: 500;
         }
-        
+
         .nav-tab.active {
             color: #6a3093;
             border-bottom: 3px solid #6a3093;
         }
-        
+
         .nav-tab:hover:not(.active) {
             background-color: #f9f9f9;
         }
-        
+
         /* Conteúdo principal */
         .content {
             padding: 1rem;
             max-width: 800px;
             margin: 0 auto;
         }
-        
+
         /* Estilo das tarefas */
         .task-list {
             list-style: none;
         }
-        
+
         .task-item {
             background-color: white;
             border-radius: 8px;
@@ -122,18 +124,18 @@
             position: relative;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        
+
         .task-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+
         .task-header {
             display: flex;
             align-items: center;
             margin-bottom: 0.5rem;
         }
-        
+
         .task-time {
             background-color: #f0f0f0;
             padding: 0.25rem 0.5rem;
@@ -141,38 +143,38 @@
             font-size: 0.8rem;
             margin-right: 0.5rem;
         }
-        
+
         .task-title {
             font-weight: 600;
             flex: 1;
         }
-        
+
         .task-description {
             color: #666;
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
         }
-        
+
         .task-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: 0.5rem;
         }
-        
+
         /* Prioridades */
         .priority-critical {
             border-left: 4px solid #e74c3c;
         }
-        
+
         .priority-attention {
             border-left: 4px solid #f39c12;
         }
-        
+
         .priority-normal {
             border-left: 4px solid #2ecc71;
         }
-        
+
         /* Botões */
         .btn {
             padding: 0.5rem 1rem;
@@ -185,52 +187,52 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .btn-primary {
             background-color: #6a3093;
             color: white;
         }
-        
+
         .btn-primary:hover {
             background-color: #8a4baf;
         }
-        
+
         .btn-secondary {
             background-color: #f0f0f0;
             color: #333;
         }
-        
+
         .btn-secondary:hover {
             background-color: #e0e0e0;
         }
-        
+
         .btn-success {
             background-color: #2ecc71;
             color: white;
         }
-        
+
         .btn-success:hover {
             background-color: #27ae60;
         }
-        
+
         .btn-danger {
             background-color: #e74c3c;
             color: white;
         }
-        
+
         .btn-danger:hover {
             background-color: #c0392b;
         }
-        
+
         .btn-sm {
             padding: 0.25rem 0.5rem;
             font-size: 0.8rem;
         }
-        
+
         .btn-icon {
             margin-right: 0.5rem;
         }
-        
+
         /* Modal */
         .modal-overlay {
             position: fixed;
@@ -245,7 +247,7 @@
             z-index: 1000;
             display: none;
         }
-        
+
         .modal {
             background-color: white;
             border-radius: 8px;
@@ -254,19 +256,19 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-        
+
         .modal-title {
             font-size: 1.2rem;
             font-weight: 600;
         }
-        
+
         .modal-close {
             background: none;
             border: none;
@@ -274,17 +276,17 @@
             cursor: pointer;
             color: #666;
         }
-        
+
         .form-group {
             margin-bottom: 1rem;
         }
-        
+
         .form-label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
         }
-        
+
         .form-control {
             width: 100%;
             padding: 0.75rem;
@@ -292,7 +294,7 @@
             border-radius: 4px;
             font-size: 1rem;
         }
-        
+
         .form-select {
             width: 100%;
             padding: 0.75rem;
@@ -301,39 +303,39 @@
             font-size: 1rem;
             background-color: white;
         }
-        
+
         .form-check {
             display: flex;
             align-items: center;
             margin-bottom: 0.5rem;
         }
-        
+
         .form-check-input {
             margin-right: 0.5rem;
         }
-        
+
         .modal-footer {
             display: flex;
             justify-content: flex-end;
             margin-top: 1rem;
         }
-        
+
         .modal-footer .btn {
             margin-left: 0.5rem;
         }
-        
+
         /* Comentários */
         .comments-section {
             margin-top: 1rem;
             padding-top: 1rem;
             border-top: 1px solid #eee;
         }
-        
+
         .comment-list {
             list-style: none;
             margin-bottom: 1rem;
         }
-        
+
         .comment-item {
             background-color: #f9f9f9;
             padding: 0.75rem;
@@ -341,34 +343,34 @@
             margin-bottom: 0.5rem;
             font-size: 0.9rem;
         }
-        
+
         .comment-time {
             font-size: 0.8rem;
             color: #999;
         }
-        
+
         .comment-image {
             max-width: 100%;
             border-radius: 4px;
             margin-top: 0.5rem;
         }
-        
+
         .comment-form {
             display: flex;
             margin-top: 0.5rem;
         }
-        
+
         .comment-input {
             flex: 1;
             padding: 0.5rem;
             border: 1px solid #ddd;
             border-radius: 4px 0 0 4px;
         }
-        
+
         .comment-btn {
             border-radius: 0 4px 4px 0;
         }
-        
+
         /* Badge */
         .badge {
             display: inline-block;
@@ -377,27 +379,27 @@
             font-size: 0.75rem;
             font-weight: 600;
         }
-        
+
         .badge-primary {
             background-color: #6a3093;
             color: white;
         }
-        
+
         .badge-success {
             background-color: #2ecc71;
             color: white;
         }
-        
+
         .badge-warning {
             background-color: #f39c12;
             color: white;
         }
-        
+
         .badge-danger {
             background-color: #e74c3c;
             color: white;
         }
-        
+
         /* Visualização semanal */
         .week-view {
             display: grid;
@@ -405,30 +407,30 @@
             gap: 0.5rem;
             margin-top: 1rem;
         }
-        
+
         .week-day {
             background-color: white;
             border-radius: 8px;
             padding: 1rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
-        
+
         .week-day-header {
             text-align: center;
             padding-bottom: 0.5rem;
             margin-bottom: 0.5rem;
             border-bottom: 1px solid #eee;
         }
-        
+
         .day-name {
             font-weight: 600;
             color: #6a3093;
         }
-        
+
         .day-tasks {
             min-height: 100px;
         }
-        
+
         .week-task {
             background-color: #f9f9f9;
             padding: 0.5rem;
@@ -437,19 +439,19 @@
             font-size: 0.85rem;
             border-left: 3px solid #ddd;
         }
-        
+
         .week-task.priority-critical {
             background-color: rgba(231, 76, 60, 0.1);
         }
-        
+
         .week-task.priority-attention {
             background-color: rgba(243, 156, 18, 0.1);
         }
-        
+
         .week-task.priority-normal {
             background-color: rgba(46, 204, 113, 0.1);
         }
-        
+
         /* Relatórios */
         .stats-grid {
             display: grid;
@@ -457,26 +459,26 @@
             gap: 1rem;
             margin-bottom: 2rem;
         }
-        
+
         .stat-card {
             background-color: white;
             border-radius: 8px;
             padding: 1rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
-        
+
         .stat-title {
             font-size: 1rem;
             color: #666;
             margin-bottom: 0.5rem;
         }
-        
+
         .stat-value {
             font-size: 2rem;
             font-weight: 600;
             color: #6a3093;
         }
-        
+
         .chart-container {
             background-color: white;
             border-radius: 8px;
@@ -484,7 +486,7 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
             margin-bottom: 1rem;
         }
-        
+
         /* Botão flutuante de adicionar */
         .floating-btn {
             position: fixed;
@@ -504,13 +506,13 @@
             border: none;
             font-size: 1.5rem;
         }
-        
+
         .floating-btn:hover {
             background-color: #8a4baf;
             transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
         }
-        
+
         /* Alertas e notificações */
         .alert {
             padding: 1rem;
@@ -519,52 +521,52 @@
             display: flex;
             align-items: center;
         }
-        
+
         .alert-success {
             background-color: rgba(46, 204, 113, 0.1);
             border-left: 4px solid #2ecc71;
             color: #27ae60;
         }
-        
+
         .alert-warning {
             background-color: rgba(243, 156, 18, 0.1);
             border-left: 4px solid #f39c12;
             color: #e67e22;
         }
-        
+
         .alert-danger {
             background-color: rgba(231, 76, 60, 0.1);
             border-left: 4px solid #e74c3c;
             color: #c0392b;
         }
-        
+
         .alert-icon {
             margin-right: 0.5rem;
             font-size: 1.2rem;
         }
-        
+
         /* Responsividade */
         @media (max-width: 768px) {
             .week-view {
                 grid-template-columns: 1fr;
             }
-            
+
             .week-day {
                 margin-bottom: 1rem;
             }
         }
-        
+
         /* Dias de recorrência */
         .recurrence-days {
             display: flex;
             gap: 0.5rem;
             margin-top: 0.5rem;
         }
-        
+
         .day-checkbox {
             display: none;
         }
-        
+
         .day-label {
             width: 35px;
             height: 35px;
@@ -577,12 +579,12 @@
             font-size: 0.8rem;
             transition: all 0.2s;
         }
-        
+
         .day-checkbox:checked + .day-label {
             background-color: #6a3093;
             color: white;
         }
-        
+
         /* Ícones */
         .icon {
             display: inline-block;
@@ -593,17 +595,17 @@
             fill: currentColor;
             line-height: 1;
         }
-        
+
         .icon-sm {
             width: 18px;
             height: 18px;
         }
-        
+
         .icon-lg {
             width: 30px;
             height: 30px;
         }
-        
+
         /* Ocultar elementos */
         .hidden {
             display: none !important;
@@ -676,21 +678,21 @@
         <!-- Seção Relatórios (inicialmente oculta) -->
         <section id="relatorios-section" class="tab-content hidden">
             <h2 class="section-title">Resumo de Atividades</h2>
-            
+
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-title">Tarefas concluídas esta semana</div>
                     <div class="stat-value" id="tasks-completed">0</div>
                     <div class="stat-subtitle" id="tasks-completed-ratio">concluídas de 0 tarefas</div>
                 </div>
-                
+
                 <div class="stat-card">
                     <div class="stat-title">Pontualidade</div>
                     <div class="stat-value" id="tasks-on-time">0</div>
                     <div class="stat-subtitle" id="tasks-on-time-ratio">no horário de 0 executadas</div>
                 </div>
             </div>
-            
+
             <div class="chart-container">
                 <h3 class="chart-title">Distribuição por Prioridade</h3>
                 <div class="chart-content">
@@ -768,22 +770,22 @@
                         <div class="recurrence-days">
                             <input type="checkbox" id="day-0" class="day-checkbox" value="0">
                             <label for="day-0" class="day-label">D</label>
-                            
+
                             <input type="checkbox" id="day-1" class="day-checkbox" value="1">
                             <label for="day-1" class="day-label">S</label>
-                            
+
                             <input type="checkbox" id="day-2" class="day-checkbox" value="2">
                             <label for="day-2" class="day-label">T</label>
-                            
+
                             <input type="checkbox" id="day-3" class="day-checkbox" value="3">
                             <label for="day-3" class="day-label">Q</label>
-                            
+
                             <input type="checkbox" id="day-4" class="day-checkbox" value="4">
                             <label for="day-4" class="day-label">Q</label>
-                            
+
                             <input type="checkbox" id="day-5" class="day-checkbox" value="5">
                             <label for="day-5" class="day-label">S</label>
-                            
+
                             <input type="checkbox" id="day-6" class="day-checkbox" value="6">
                             <label for="day-6" class="day-label">S</label>
                         </div>
@@ -813,7 +815,7 @@
                 <ul class="comment-list" id="commentsList">
                     <!-- Os comentários serão inseridos aqui dinamicamente -->
                 </ul>
-                
+
                 <form id="commentForm">
                     <input type="hidden" id="commentTaskId">
                     <div class="form-group">
@@ -843,19 +845,19 @@
             "janeiro", "fevereiro", "março", "abril", "maio", "junho",
             "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
         ];
-        
+
         const dayNames = [
-            "domingo", "segunda-feira", "terça-feira", "quarta-feira", 
+            "domingo", "segunda-feira", "terça-feira", "quarta-feira",
             "quinta-feira", "sexta-feira", "sábado"
         ];
-        
+
         const shortDayNames = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
-        
+
         // Estado da aplicação
         let currentDate = new Date();
         let tasks = [];
         let editingTaskId = null;
-        
+
         // Elementos DOM
         const currentDateEl = document.getElementById('currentDate');
         const prevDayBtn = document.getElementById('prevDay');
@@ -888,7 +890,7 @@
         const commentImageInput = document.getElementById('commentImage');
         const navTabs = document.querySelectorAll('.nav-tab');
         const tabContents = document.querySelectorAll('.tab-content');
-        
+
         // Estatísticas
         const tasksCompletedEl = document.getElementById('tasks-completed');
         const tasksCompletedRatioEl = document.getElementById('tasks-completed-ratio');
@@ -897,581 +899,584 @@
         const priorityCriticalPercentEl = document.getElementById('priority-critical-percent');
         const priorityAttentionPercentEl = document.getElementById('priority-attention-percent');
         const priorityNormalPercentEl = document.getElementById('priority-normal-percent');
-        
+
         // Inicialização da Aplicação
         document.addEventListener('DOMContentLoaded', () => {
-            // Carregar tarefas do armazenamento local
-            loadTasks();
-            
-            // Atualizar exibição da data atual
+            // loadTasks não é mais chamado diretamente aqui. Será chamado pelo listener do Firestore.
             updateDateDisplay();
-            
-            // Renderizar tarefas
-            renderTasks();
-            
-            // Renderizar visualização semanal
-            renderWeekView();
-            
-            // Renderizar estatísticas
-            updateStatistics();
-            
-            // Configurar event listeners
             setupEventListeners();
+            setupFirestoreListener(); // Configurar o listener para atualizações em tempo real
         });
-        
+
+        function setupFirestoreListener() {
+            const { collection, onSnapshot, Timestamp } = window.firebaseFirestore;
+            const tasksCol = collection(window.db, "tasks");
+
+            onSnapshot(tasksCol, (snapshot) => {
+                console.log("Dados do Firestore atualizados em tempo real.");
+                tasks = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    const convertTimestampToDate = (timestamp) => {
+                        if (timestamp && typeof timestamp.toDate === 'function') {
+                            return timestamp.toDate();
+                        }
+                        if (timestamp instanceof Date) return timestamp;
+                        if (typeof timestamp === 'string') {
+                            const parsedDate = new Date(timestamp);
+                            return isNaN(parsedDate.getTime()) ? null : parsedDate;
+                        }
+                        return null;
+                    };
+
+                    const validComments = Array.isArray(data.comments) ? data.comments.filter(comment => {
+                        if (!comment || !comment.timestamp) return false;
+                        const tsDate = convertTimestampToDate(comment.timestamp);
+                        return tsDate instanceof Date && !isNaN(tsDate.getTime());
+                    }) : [];
+
+                    return {
+                        id: doc.id,
+                        ...data,
+                        date: convertTimestampToDate(data.date),
+                        realStartTime: data.realStartTime ? convertTimestampToDate(data.realStartTime) : null,
+                        realEndTime: data.realEndTime ? convertTimestampToDate(data.realEndTime) : null,
+                        comments: validComments.map(comment => ({
+                            ...comment,
+                            timestamp: convertTimestampToDate(comment.timestamp)
+                        }))
+                    };
+                }).filter(task => task.date instanceof Date && !isNaN(task.date.getTime()));
+
+                renderTasks();
+                renderWeekView();
+                updateStatistics();
+            }, (error) => {
+                console.error("Erro no listener do Firestore: ", error);
+            });
+        }
+
         // Funções principais
         function setupEventListeners() {
-            // Navegação de datas
             prevDayBtn.addEventListener('click', () => {
                 currentDate.setDate(currentDate.getDate() - 1);
                 updateDateDisplay();
-                renderTasks();
+                renderTasks(); // Re-renderiza tarefas para a nova data
             });
-            
+
             nextDayBtn.addEventListener('click', () => {
                 currentDate.setDate(currentDate.getDate() + 1);
                 updateDateDisplay();
-                renderTasks();
+                renderTasks(); // Re-renderiza tarefas para a nova data
             });
-            
-            // Navegação de abas
+
             navTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
-                    // Remover classe active de todas as abas
                     navTabs.forEach(t => t.classList.remove('active'));
-                    
-                    // Adicionar classe active à aba clicada
                     tab.classList.add('active');
-                    
-                    // Ocultar todas as seções de conteúdo
                     tabContents.forEach(content => content.classList.add('hidden'));
-                    
-                    // Exibir a seção de conteúdo correspondente
                     const tabId = tab.dataset.tab;
                     document.getElementById(`${tabId}-section`).classList.remove('hidden');
-                    
-                    // Atualizar conteúdo específico da aba
-                    if (tabId === 'semana') {
-                        renderWeekView();
-                    } else if (tabId === 'relatorios') {
-                        updateStatistics();
-                    }
+                    if (tabId === 'semana') renderWeekView();
+                    else if (tabId === 'relatorios') updateStatistics();
                 });
             });
-            
-            // Manipulação do modal de tarefas
-            addTaskBtn.addEventListener('click', () => {
-                openTaskModal();
-            });
-            
-            closeTaskModal.addEventListener('click', () => {
-                taskModal.style.display = 'none';
-            });
-            
-            cancelTaskBtn.addEventListener('click', () => {
-                taskModal.style.display = 'none';
-            });
-            
+
+            addTaskBtn.addEventListener('click', () => openTaskModal());
+            closeTaskModal.addEventListener('click', () => taskModal.style.display = 'none');
+            cancelTaskBtn.addEventListener('click', () => taskModal.style.display = 'none');
             taskForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 saveTask();
             });
-            
-            // Manipulação de tarefas recorrentes
-            taskRecurrentInput.addEventListener('change', () => {
-                if (taskRecurrentInput.checked) {
-                    recurrenceOptions.classList.remove('hidden');
-                } else {
-                    recurrenceOptions.classList.add('hidden');
-                }
-            });
-            
-            recurrenceSpecificInput.addEventListener('change', () => {
-                if (recurrenceSpecificInput.checked) {
-                    specificDays.classList.remove('hidden');
-                } else {
-                    specificDays.classList.add('hidden');
-                }
-            });
-            
-            recurrenceDailyInput.addEventListener('change', () => {
-                if (recurrenceDailyInput.checked) {
-                    specificDays.classList.add('hidden');
-                }
-            });
-            
-            // Manipulação do modal de comentários
-            closeCommentsModal.addEventListener('click', () => {
-                commentsModal.style.display = 'none';
-            });
-            
+
+            taskRecurrentInput.addEventListener('change', () => recurrenceOptions.classList.toggle('hidden', !taskRecurrentInput.checked));
+            recurrenceSpecificInput.addEventListener('change', () => specificDays.classList.toggle('hidden', !recurrenceSpecificInput.checked));
+            recurrenceDailyInput.addEventListener('change', () => specificDays.classList.add('hidden'));
+
+            closeCommentsModal.addEventListener('click', () => commentsModal.style.display = 'none');
             commentForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 addComment();
             });
-            
-            // Fechar modais ao clicar fora deles
+
             window.addEventListener('click', (e) => {
-                if (e.target === taskModal) {
-                    taskModal.style.display = 'none';
-                }
-                if (e.target === commentsModal) {
-                    commentsModal.style.display = 'none';
-                }
+                if (e.target === taskModal) taskModal.style.display = 'none';
+                if (e.target === commentsModal) commentsModal.style.display = 'none';
             });
         }
-        
+
         function updateDateDisplay() {
             const day = currentDate.getDate();
             const month = monthNames[currentDate.getMonth()];
             const year = currentDate.getFullYear();
             const weekday = dayNames[currentDate.getDay()];
-            
             currentDateEl.textContent = `${weekday}, ${day} de ${month} de ${year}`;
         }
-        
+
         function formatDate(date) {
+            if (!(date instanceof Date) || isNaN(date.getTime())) return null; // Validação
             const day = date.getDate().toString().padStart(2, '0');
             const month = (date.getMonth() + 1).toString().padStart(2, '0');
             const year = date.getFullYear();
-            
             return `${year}-${month}-${day}`;
         }
-        
+
         function formatTime(timeString) {
-            // Converter formato 24h (HH:MM) para exibição amigável
             const [hours, minutes] = timeString.split(':');
             return `${hours}:${minutes}`;
         }
-        
+
         function isToday(date) {
+            if (!(date instanceof Date) || isNaN(date.getTime())) return false;
             const today = new Date();
-            return date.getDate() === today.getDate() && 
-                   date.getMonth() === today.getMonth() && 
+            return date.getDate() === today.getDate() &&
+                   date.getMonth() === today.getMonth() &&
                    date.getFullYear() === today.getFullYear();
         }
-        
+
         function isPast(date) {
+            if (!(date instanceof Date) || isNaN(date.getTime())) return false;
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            date.setHours(0, 0, 0, 0);
-            return date < today;
+            const compareDate = new Date(date); // Clonar para não modificar a original
+            compareDate.setHours(0,0,0,0);
+            return compareDate < today;
         }
-        
-        // Manipulação de Tarefas
-        function loadTasks() {
-            const storedTasks = localStorage.getItem('agenda_tasks');
-            tasks = storedTasks ? JSON.parse(storedTasks) : [];
-            
-            // Converter strings de data para objetos Date
-            tasks.forEach(task => {
-                task.date = new Date(task.date);
-                if (task.realStartTime) {
-                    task.realStartTime = new Date(task.realStartTime);
-                }
-                if (task.realEndTime) {
-                    task.realEndTime = new Date(task.realEndTime);
-                }
-            });
+
+        // Converte objetos Date para Timestamps do Firestore ANTES de salvar
+        function convertToFirestoreTimestamps(taskData) {
+            const { Timestamp } = window.firebaseFirestore;
+            const dataToSave = { ...taskData };
+
+            if (dataToSave.date instanceof Date) {
+                dataToSave.date = Timestamp.fromDate(dataToSave.date);
+            }
+            if (dataToSave.realStartTime instanceof Date) {
+                dataToSave.realStartTime = Timestamp.fromDate(dataToSave.realStartTime);
+            }
+            if (dataToSave.realEndTime instanceof Date) {
+                dataToSave.realEndTime = Timestamp.fromDate(dataToSave.realEndTime);
+            }
+            if (Array.isArray(dataToSave.comments)) {
+                dataToSave.comments = dataToSave.comments.map(comment => {
+                    if (comment.timestamp instanceof Date) {
+                        return { ...comment, timestamp: Timestamp.fromDate(comment.timestamp) };
+                    }
+                    return comment;
+                });
+            }
+            return dataToSave;
         }
-        
-        function saveTasks() {
-            localStorage.setItem('agenda_tasks', JSON.stringify(tasks));
+
+        // Manipulação de Tarefas com Firestore
+        async function loadTasks() {
+            const { getDocs, collection, Timestamp } = window.firebaseFirestore;
+            const tasksCol = collection(window.db, "tasks");
+            try {
+                const taskSnapshot = await getDocs(tasksCol);
+                tasks = taskSnapshot.docs.map(doc => {
+                    const data = doc.data();
+
+                    const convertTimestampToDate = (timestamp) => {
+                        if (timestamp && typeof timestamp.toDate === 'function') {
+                            return timestamp.toDate();
+                        }
+                        if (timestamp instanceof Date) return timestamp;
+                        if (typeof timestamp === 'string') {
+                            const parsedDate = new Date(timestamp);
+                            return isNaN(parsedDate.getTime()) ? null : parsedDate;
+                        }
+                        return null;
+                    };
+
+                    const validComments = Array.isArray(data.comments) ? data.comments.filter(comment => {
+                        if (!comment || !comment.timestamp) return false;
+                        const tsDate = convertTimestampToDate(comment.timestamp);
+                        return tsDate instanceof Date && !isNaN(tsDate.getTime());
+                    }) : [];
+
+                    return {
+                        id: doc.id, // Armazenar o ID do documento Firestore
+                        ...data,
+                        date: convertTimestampToDate(data.date),
+                        realStartTime: data.realStartTime ? convertTimestampToDate(data.realStartTime) : null,
+                        realEndTime: data.realEndTime ? convertTimestampToDate(data.realEndTime) : null,
+                        comments: validComments.map(comment => ({
+                            ...comment,
+                            timestamp: convertTimestampToDate(comment.timestamp)
+                        }))
+                    };
+                }).filter(task => task.date instanceof Date && !isNaN(task.date.getTime())); // Garantir que a tarefa tenha uma data válida
+            } catch (error) {
+                console.error("Erro ao carregar tarefas do Firestore:", error);
+                tasks = [];
+            }
+
+            renderTasks();
+            renderWeekView();
+            updateStatistics();
         }
-        
+
+        // saveTasks não é mais necessária para salvar tudo, as operações são individuais.
+        // Pode ser mantida como um placeholder ou removida se não houver planos para operações em lote.
+        async function saveTasks() {
+            console.log("saveTasks: Operações de escrita são individuais e diretas ao Firestore.");
+        }
+
         function openTaskModal(taskId = null) {
-            // Resetar formulário
             taskForm.reset();
-            
+            recurrenceOptions.classList.add('hidden');
+            specificDays.classList.add('hidden');
+            editingTaskId = taskId;
+
             if (taskId) {
-                // Edição de tarefa existente
                 const task = tasks.find(t => t.id === taskId);
                 if (task) {
                     taskModalTitle.textContent = 'Editar Tarefa';
-                    taskIdInput.value = task.id;
+                    taskIdInput.value = task.id; // ID do Firestore
                     taskTitleInput.value = task.title;
                     taskDescriptionInput.value = task.description || '';
                     taskStartTimeInput.value = task.startTime;
                     taskEndTimeInput.value = task.endTime;
                     taskPriorityInput.value = task.priority;
-                    
-                    // Configurar recorrência
                     taskRecurrentInput.checked = task.recurrent;
                     if (task.recurrent) {
                         recurrenceOptions.classList.remove('hidden');
-                        
                         if (task.recurrenceType === 'daily') {
                             recurrenceDailyInput.checked = true;
-                            specificDays.classList.add('hidden');
                         } else {
                             recurrenceSpecificInput.checked = true;
                             specificDays.classList.remove('hidden');
-                            
-                            // Marcar dias específicos
-                            const dayCheckboxes = document.querySelectorAll('.day-checkbox');
-                            dayCheckboxes.forEach(checkbox => {
+                            document.querySelectorAll('.day-checkbox').forEach(checkbox => {
                                 checkbox.checked = task.recurringDays && task.recurringDays.includes(parseInt(checkbox.value));
                             });
                         }
-                    } else {
-                        recurrenceOptions.classList.add('hidden');
                     }
-                    
-                    editingTaskId = taskId;
                 }
             } else {
-                // Nova tarefa
                 taskModalTitle.textContent = 'Adicionar Nova Tarefa';
-                taskIdInput.value = '';
-                
-                // Definir horário padrão para hora atual arredondada para a próxima hora
+                taskIdInput.value = ''; // Limpar para nova tarefa
                 const now = new Date();
                 const nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0);
                 const endHour = new Date(nextHour.getTime() + 60 * 60 * 1000);
-                
                 taskStartTimeInput.value = `${nextHour.getHours().toString().padStart(2, '0')}:00`;
                 taskEndTimeInput.value = `${endHour.getHours().toString().padStart(2, '0')}:00`;
-                
-                // Resetar recorrência
-                taskRecurrentInput.checked = false;
-                recurrenceOptions.classList.add('hidden');
-                specificDays.classList.add('hidden');
-                
-                editingTaskId = null;
             }
-            
             taskModal.style.display = 'flex';
         }
-        
-        function saveTask() {
+
+        async function saveTask() {
+            const { addDoc, updateDoc, doc, collection, Timestamp } = window.firebaseFirestore;
             const title = taskTitleInput.value.trim();
             const description = taskDescriptionInput.value.trim();
             const startTime = taskStartTimeInput.value;
             const endTime = taskEndTimeInput.value;
             const priority = taskPriorityInput.value;
             const recurrent = taskRecurrentInput.checked;
-            
-            // Validar horários
+
             if (startTime >= endTime) {
                 alert('O horário de início deve ser anterior ao horário de fim.');
                 return;
             }
-            
-            // Configurar recorrência
+
             let recurrenceType = null;
             let recurringDays = null;
-            
             if (recurrent) {
                 recurrenceType = recurrenceDailyInput.checked ? 'daily' : 'specific';
-                
                 if (recurrenceType === 'specific') {
-                    recurringDays = [];
-                    const dayCheckboxes = document.querySelectorAll('.day-checkbox:checked');
-                    dayCheckboxes.forEach(checkbox => {
-                        recurringDays.push(parseInt(checkbox.value));
-                    });
-                    
+                    recurringDays = Array.from(document.querySelectorAll('.day-checkbox:checked')).map(cb => parseInt(cb.value));
                     if (recurringDays.length === 0) {
                         alert('Selecione pelo menos um dia para recorrência específica.');
                         return;
                     }
                 }
             }
-            
+
+            const taskDataToSave = {
+                // Não inclua 'id' aqui, Firestore gera automaticamente ou usa o 'editingTaskId' para o 'docRef'
+                date: new Date(currentDate), // Usar a data atual da visualização para novas tarefas
+                title,
+                description,
+                startTime,
+                endTime,
+                priority,
+                status: 'pending', // Status padrão para novas tarefas
+                comments: editingTaskId ? (tasks.find(t => t.id === editingTaskId)?.comments || []) : [], // Manter comentários existentes ao editar
+                recurrent,
+                recurrenceType,
+                recurringDays,
+                // Campos de tempo real são definidos em start/finish Task
+                realStartTime: editingTaskId ? (tasks.find(t => t.id === editingTaskId)?.realStartTime || null) : null,
+                realEndTime: editingTaskId ? (tasks.find(t => t.id === editingTaskId)?.realEndTime || null) : null,
+            };
+
+            // Se estiver editando, a data da tarefa não deve ser alterada para 'currentDate'
+            // a menos que seja explicitamente parte da edição (o que não é o caso aqui).
+            // A data original da tarefa deve ser preservada.
             if (editingTaskId) {
-                // Atualizar tarefa existente
-                const taskIndex = tasks.findIndex(t => t.id === editingTaskId);
-                
-                if (taskIndex !== -1) {
-                    tasks[taskIndex] = {
-                        ...tasks[taskIndex],
-                        title,
-                        description,
-                        startTime,
-                        endTime,
-                        priority,
-                        recurrent,
-                        recurrenceType,
-                        recurringDays
-                    };
-                    
-                    // Se a tarefa for recorrente, atualizar ou criar instâncias futuras
+                 const existingTask = tasks.find(t => t.id === editingTaskId);
+                 if (existingTask) {
+                    taskDataToSave.date = existingTask.date; // Preservar a data original
+                    taskDataToSave.status = existingTask.status; // Preservar status
+                 }
+            }
+
+
+            const firestoreReadyData = convertToFirestoreTimestamps(taskDataToSave);
+
+            try {
+                if (editingTaskId) {
+                    const taskDocRef = doc(window.db, "tasks", editingTaskId);
+                    await updateDoc(taskDocRef, firestoreReadyData);
+                } else {
+                    const docRef = await addDoc(collection(window.db, "tasks"), firestoreReadyData);
+                    // Se for recorrente, criar instâncias após salvar a principal e obter o ID
                     if (recurrent) {
-                        updateRecurringInstances(tasks[taskIndex]);
+                         // Passar o ID da tarefa pai e os dados da tarefa pai para criar instâncias
+                        createRecurringInstances({ ...taskDataToSave, id: docRef.id, date: new Date(taskDataToSave.date) });
                     }
                 }
-            } else {
-                // Criar nova tarefa
-                const newTask = {
-                    id: Date.now().toString(),
-                    date: new Date(currentDate),
-                    title,
-                    description,
-                    startTime,
-                    endTime,
-                    priority,
-                    status: 'pending',
-                    comments: [],
-                    recurrent,
-                    recurrenceType,
-                    recurringDays
-                };
-                
-                tasks.push(newTask);
-                
-                // Se a tarefa for recorrente, criar instâncias futuras
-                if (recurrent) {
-                    createRecurringInstances(newTask);
-                }
+                await loadTasks(); // Recarregar tarefas do Firestore para atualizar a UI
+            } catch (error) {
+                console.error("Erro ao salvar tarefa no Firestore: ", error);
             }
-            
-            // Salvar tarefas e atualizar UI
-            saveTasks();
-            renderTasks();
-            renderWeekView();
-            updateStatistics();
-            
-            // Fechar modal
+
             taskModal.style.display = 'none';
         }
-        
-        function createRecurringInstances(task) {
-            // Criar instâncias para 30 dias no futuro
-            const futureLimit = new Date(currentDate);
+
+        async function createRecurringInstances(parentTask) {
+            const { addDoc, collection, Timestamp } = window.firebaseFirestore;
+            const futureLimit = new Date(parentTask.date); // Usar a data da tarefa pai como base
             futureLimit.setDate(futureLimit.getDate() + 30);
-            
-            const startDate = new Date(task.date);
-            startDate.setDate(startDate.getDate() + 1); // Começar do dia seguinte
-            
+
+            const startDate = new Date(parentTask.date);
+            startDate.setDate(startDate.getDate() + 1);
+
             for (let date = new Date(startDate); date <= futureLimit; date.setDate(date.getDate() + 1)) {
-                const dayOfWeek = date.getDay(); // 0 = Domingo, 6 = Sábado
-                
-                // Verificar se a data deve receber uma instância
-                if (task.recurrenceType === 'daily' || 
-                    (task.recurrenceType === 'specific' && task.recurringDays.includes(dayOfWeek))) {
-                    
-                    // Criar nova instância
-                    const instanceTask = {
-                        id: `${task.id}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-                        parentTaskId: task.id,
-                        date: new Date(date),
-                        title: task.title,
-                        description: task.description,
-                        startTime: task.startTime,
-                        endTime: task.endTime,
-                        priority: task.priority,
+                const dayOfWeek = date.getDay();
+                if (parentTask.recurrenceType === 'daily' ||
+                    (parentTask.recurrenceType === 'specific' && parentTask.recurringDays.includes(dayOfWeek))) {
+
+                    const instanceTaskData = {
+                        parentTaskId: parentTask.id, // ID da tarefa pai
+                        date: Timestamp.fromDate(new Date(date)), // Salvar como Timestamp
+                        title: parentTask.title,
+                        description: parentTask.description,
+                        startTime: parentTask.startTime,
+                        endTime: parentTask.endTime,
+                        priority: parentTask.priority,
                         status: 'pending',
-                        comments: [],
-                        recurrent: false // Instâncias não são recorrentes por si só
+                        comments: [], // Instâncias não herdam comentários
+                        recurrent: false // Instâncias não são recorrentes por si
                     };
-                    
-                    tasks.push(instanceTask);
-                }
-            }
-        }
-        
-        function updateRecurringInstances(task) {
-            // Atualizar todas as instâncias futuras da tarefa recorrente
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            // Encontrar todas as instâncias futuras
-            const futureTasks = tasks.filter(t => 
-                t.parentTaskId === task.id && 
-                new Date(t.date) >= today
-            );
-            
-            // Atualizar cada instância
-            futureTasks.forEach(instanceTask => {
-                instanceTask.title = task.title;
-                instanceTask.description = task.description;
-                instanceTask.startTime = task.startTime;
-                instanceTask.endTime = task.endTime;
-                instanceTask.priority = task.priority;
-            });
-            
-            // Excluir instâncias que não correspondem mais ao padrão de recorrência
-            if (task.recurrenceType === 'specific') {
-                tasks = tasks.filter(t => {
-                    if (t.parentTaskId === task.id && new Date(t.date) >= today) {
-                        const dayOfWeek = new Date(t.date).getDay();
-                        return task.recurringDays.includes(dayOfWeek);
+                    try {
+                        await addDoc(collection(window.db, "tasks"), instanceTaskData);
+                    } catch (error) {
+                        console.error("Erro ao criar instância recorrente:", error);
                     }
-                    return true;
-                });
-            }
-            
-            // Criar novas instâncias conforme necessário
-            createRecurringInstances(task);
-        }
-        
-        function deleteTask(taskId) {
-            const taskIndex = tasks.findIndex(t => t.id === taskId);
-            
-            if (taskIndex !== -1) {
-                const task = tasks[taskIndex];
-                
-                // Perguntar se o usuário deseja excluir todas as instâncias recorrentes
-                if (task.recurrent && confirm("Deseja excluir esta tarefa e todas as suas ocorrências futuras?")) {
-                    // Excluir a tarefa principal e todas as instâncias
-                    tasks = tasks.filter(t => t.id !== taskId && t.parentTaskId !== taskId);
-                } else {
-                    // Excluir apenas esta tarefa
-                    tasks.splice(taskIndex, 1);
                 }
-                
-                saveTasks();
-                renderTasks();
-                renderWeekView();
-                updateStatistics();
             }
+            await loadTasks(); // Recarregar para mostrar novas instâncias
         }
-        
-        function startTask(taskId) {
+
+        // updateRecurringInstances precisaria ser reavaliado.
+        // Uma abordagem mais simples seria deletar e recriar instâncias futuras se o padrão de recorrência mudar.
+        // Ou, para edições de título/descrição, atualizar todas as instâncias futuras.
+        // Por simplicidade, a edição de recorrência pode ser tratada como:
+        // 1. Usuário desmarca 'recorrente': perguntar se quer remover futuras instâncias.
+        // 2. Usuário muda dias/tipo: remover futuras e recriar.
+        // Esta função placeholder pode ser expandida depois.
+        async function updateRecurringInstances(task) {
+            console.log("Atualização de instâncias recorrentes precisa de lógica mais detalhada.", task);
+            // Implementação futura: buscar instâncias com parentTaskId, deletar e recriar ou atualizar.
+            // Por ora, apenas recarregamos para refletir a mudança na tarefa pai.
+            await loadTasks();
+        }
+
+        async function deleteTask(taskId) {
+            const { deleteDoc, doc, collection, query, where, getDocs } = window.firebaseFirestore;
             const task = tasks.find(t => t.id === taskId);
-            
+
             if (task) {
-                task.status = 'in-progress';
-                task.realStartTime = new Date();
-                
-                saveTasks();
-                renderTasks();
+                try {
+                    // Se a tarefa for recorrente e o usuário confirmar, excluir todas as instâncias
+                    if (task.recurrent && confirm("Deseja excluir esta tarefa e todas as suas ocorrências futuras?")) {
+                        // Excluir a tarefa principal
+                        await deleteDoc(doc(window.db, "tasks", taskId));
+                        // Excluir todas as instâncias futuras
+                        const q = query(collection(window.db, "tasks"), where("parentTaskId", "==", taskId));
+                        const querySnapshot = await getDocs(q);
+                        querySnapshot.forEach(async (docSnapshot) => {
+                            await deleteDoc(doc(window.db, "tasks", docSnapshot.id));
+                        });
+                    } else if (!task.recurrent && task.parentTaskId && confirm("Esta é uma instância de uma tarefa recorrente. Deseja excluir apenas esta instância ou a tarefa recorrente original e todas as suas instâncias? \nClique OK para excluir apenas esta instância, ou Cancelar e edite a tarefa original para modificar a recorrência.")) {
+                        // Excluir apenas esta instância se não for a tarefa pai recorrente
+                         await deleteDoc(doc(window.db, "tasks", taskId));
+                    } else if (!task.recurrent && !task.parentTaskId) { // Tarefa normal não recorrente
+                         await deleteDoc(doc(window.db, "tasks", taskId));
+                    }
+                     // Se for uma instância e o usuário cancelar, ou se for a tarefa pai e o usuário cancelar a exclusão das instâncias, não faz nada além de não deletar.
+                } catch (error) {
+                    console.error("Erro ao deletar tarefa do Firestore: ", error);
+                }
+                await loadTasks(); // Recarregar tarefas
             }
         }
-        
-        function finishTask(taskId) {
-            const task = tasks.find(t => t.id === taskId);
-            
-            if (task) {
-                task.status = 'completed';
-                task.realEndTime = new Date();
-                
-                saveTasks();
-                renderTasks();
-                updateStatistics();
+
+        async function startTask(taskId) {
+            const { updateDoc, doc, Timestamp } = window.firebaseFirestore;
+            const taskDocRef = doc(window.db, "tasks", taskId);
+            try {
+                await updateDoc(taskDocRef, {
+                    status: 'in-progress',
+                    realStartTime: Timestamp.now()
+                });
+                await loadTasks();
+            } catch (error) {
+                console.error("Erro ao iniciar tarefa:", error);
             }
         }
-        
-        function markTaskStatus(taskId, status) {
-            const task = tasks.find(t => t.id === taskId);
-            
-            if (task) {
-                task.status = status;
-                
-                saveTasks();
-                renderTasks();
-                updateStatistics();
+
+        async function finishTask(taskId) {
+            const { updateDoc, doc, Timestamp } = window.firebaseFirestore;
+            const taskDocRef = doc(window.db, "tasks", taskId);
+            try {
+                await updateDoc(taskDocRef, {
+                    status: 'completed',
+                    realEndTime: Timestamp.now()
+                });
+                await loadTasks();
+            } catch (error) {
+                console.error("Erro ao finalizar tarefa:", error);
             }
         }
-        
-        // Manipulação de Comentários
+
+        async function markTaskStatus(taskId, newStatus) { // Renomeado 'status' para 'newStatus' para evitar conflito
+            const { updateDoc, doc } = window.firebaseFirestore;
+            const taskDocRef = doc(window.db, "tasks", taskId);
+            try {
+                await updateDoc(taskDocRef, {
+                    status: newStatus
+                });
+                await loadTasks();
+            } catch (error) {
+                console.error("Erro ao marcar status da tarefa:", error);
+            }
+        }
+
+        // Manipulação de Comentários com Firestore
         function openCommentsModal(taskId) {
             const task = tasks.find(t => t.id === taskId);
-            
             if (task) {
                 commentTaskIdInput.value = taskId;
                 renderComments(task.comments || []);
                 commentsModal.style.display = 'flex';
             }
         }
-        
-        function renderComments(comments) {
+
+        function renderComments(commentsArray) { // Renomeado 'comments' para 'commentsArray'
             commentsList.innerHTML = '';
-            
-            if (comments.length === 0) {
+            if (!commentsArray || commentsArray.length === 0) {
                 commentsList.innerHTML = '<li class="comment-item">Nenhum comentário ainda.</li>';
                 return;
             }
-            
-            comments.forEach(comment => {
+
+            commentsArray.forEach(comment => {
                 const commentEl = document.createElement('li');
                 commentEl.className = 'comment-item';
-                
-                const commentTime = new Date(comment.timestamp);
-                const timeStr = `${commentTime.getHours().toString().padStart(2, '0')}:${commentTime.getMinutes().toString().padStart(2, '0')}`;
-                
+                // Assegurar que comment.timestamp é um objeto Date antes de formatar
+                const commentTime = comment.timestamp instanceof Date ? comment.timestamp : new Date(comment.timestamp);
+                const timeStr = (commentTime && !isNaN(commentTime.getTime())) ? `${commentTime.getHours().toString().padStart(2, '0')}:${commentTime.getMinutes().toString().padStart(2, '0')}` : 'Data inválida';
+
                 let commentHTML = `
                     <div class="comment-text">${comment.text}</div>
                     <div class="comment-time">${timeStr}</div>
                 `;
-                
                 if (comment.image) {
                     commentHTML += `<img src="${comment.image}" class="comment-image" alt="Imagem do comentário">`;
                 }
-                
                 commentEl.innerHTML = commentHTML;
                 commentsList.appendChild(commentEl);
             });
         }
-        
-        function addComment() {
-            const taskId = commentTaskIdInput.value;
+
+        async function addComment() {
+            const { updateDoc, doc, Timestamp } = window.firebaseFirestore;
+            const currentTaskId = commentTaskIdInput.value; // Renomeado para evitar conflito com 'tasks' global
             const text = commentTextInput.value.trim();
             const imageFile = commentImageInput.files[0];
-            
+
             if (!text && !imageFile) {
                 alert('Adicione um texto ou uma imagem para o comentário.');
                 return;
             }
-            
-            const task = tasks.find(t => t.id === taskId);
-            
-            if (task) {
-                // Verificar limite de 10 comentários
-                if (task.comments && task.comments.length >= 10) {
-                    alert('Limite de 10 comentários atingido para esta tarefa.');
-                    return;
+
+            const taskIndex = tasks.findIndex(t => t.id === currentTaskId);
+            if (taskIndex === -1) {
+                console.error("Tarefa não encontrada para adicionar comentário:", currentTaskId);
+                return;
+            }
+
+            let taskToUpdate = { ...tasks[taskIndex] }; // Clonar a tarefa para modificação
+
+            if (taskToUpdate.comments && taskToUpdate.comments.length >= 10) {
+                alert('Limite de 10 comentários atingido para esta tarefa.');
+                return;
+            }
+
+            const newComment = {
+                id: Date.now().toString(), // ID local para o comentário
+                text,
+                timestamp: Timestamp.now() // Timestamp do Firestore para o novo comentário
+            };
+
+            const processAndSaveComment = async (commentData) => {
+                if (!Array.isArray(taskToUpdate.comments)) {
+                    taskToUpdate.comments = [];
                 }
-                
-                // Inicializar array de comentários se não existir
-                if (!task.comments) {
-                    task.comments = [];
-                }
-                
-                // Criar o novo comentário
-                const newComment = {
-                    id: Date.now().toString(),
-                    text,
-                    timestamp: new Date()
-                };
-                
-                // Processar imagem se fornecida
-                if (imageFile) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        newComment.image = e.target.result;
-                        
-                        // Adicionar comentário e salvar
-                        task.comments.push(newComment);
-                        saveTasks();
-                        renderComments(task.comments);
-                        
-                        // Limpar formulário
-                        commentTextInput.value = '';
-                        commentImageInput.value = '';
-                    };
-                    reader.readAsDataURL(imageFile);
-                } else {
-                    // Adicionar comentário sem imagem
-                    task.comments.push(newComment);
-                    saveTasks();
-                    renderComments(task.comments);
-                    
-                    // Limpar formulário
+                taskToUpdate.comments.push(commentData);
+
+                // Preparar apenas os comentários para atualização, convertendo Date para Timestamp se necessário
+                const commentsToSave = taskToUpdate.comments.map(c => {
+                    if (c.timestamp instanceof Date) { // Se algum comentário antigo ainda for Date (improvável aqui, mas seguro)
+                        return {...c, timestamp: Timestamp.fromDate(c.timestamp)};
+                    }
+                    return c; // Já deve ser Timestamp do Firestore ou de newComment
+                });
+
+                try {
+                    const taskDocRef = doc(window.db, "tasks", currentTaskId);
+                    await updateDoc(taskDocRef, { comments: commentsToSave });
+                    await loadTasks(); // Recarregar para refletir a mudança
+                    // Reabrir modal de comentários para mostrar o novo comentário
+                    openCommentsModal(currentTaskId);
                     commentTextInput.value = '';
                     commentImageInput.value = '';
+                } catch (error) {
+                    console.error("Erro ao adicionar comentário no Firestore:", error);
                 }
+            };
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    newComment.image = e.target.result; // Adicionar imagem como base64
+                    await processAndSaveComment(newComment);
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                await processAndSaveComment(newComment);
             }
         }
-        
-        // Renderização da UI
+
+        // Renderização da UI (renderTasks, renderWeekView, updateStatistics permanecem majoritariamente iguais,
+        // mas dependem da estrutura de 'tasks' carregada do Firestore)
         function renderTasks() {
             tasksContainer.innerHTML = '';
-            
-            // Filtrar tarefas para o dia atual
             const currentDateStr = formatDate(currentDate);
-            const dayTasks = tasks.filter(task => formatDate(task.date) === currentDateStr);
-            
+            // Filtrar tarefas para o dia atual. Certifique-se que task.date é um objeto Date válido.
+            const dayTasks = tasks.filter(task => task.date && formatDate(task.date) === currentDateStr);
+
             if (dayTasks.length === 0) {
                 tasksContainer.innerHTML = `
                     <div class="alert alert-info">
@@ -1483,314 +1488,204 @@
                 `;
                 return;
             }
-            
-            // Ordenar tarefas por horário de início
+
             dayTasks.sort((a, b) => a.startTime.localeCompare(b.startTime));
-            
-            // Renderizar cada tarefa
+
             dayTasks.forEach(task => {
                 const taskEl = document.createElement('div');
                 taskEl.className = `task-item priority-${task.priority}`;
-                taskEl.dataset.id = task.id;
-                
-                // Verificar se a data é no passado
-                const isPastDate = isPast(new Date(task.date));
+                taskEl.dataset.id = task.id; // ID do Firestore
+
+                const isTaskPast = isPast(task.date); // task.date deve ser um objeto Date
                 const isInProgress = task.status === 'in-progress';
                 const isCompleted = task.status === 'completed';
-                
-                // Ícones de status
+
                 let statusIcon = '';
-                if (isCompleted) {
-                    statusIcon = `<span class="badge badge-success">Concluída</span>`;
-                } else if (isInProgress) {
-                    statusIcon = `<span class="badge badge-primary">Em andamento</span>`;
-                }
-                
-                // Renderizar ícone de recorrência se aplicável
-                let recurrentIcon = '';
-                if (task.recurrent || task.parentTaskId) {
-                    recurrentIcon = `
-                        <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-left: 8px; color: #6a3093;">
-                            <path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"></path>
-                        </svg>
-                    `;
-                }
-                
-                // Renderizar comentários se houver
-                let commentsIndicator = '';
-                if (task.comments && task.comments.length > 0) {
-                    commentsIndicator = `
-                        <span class="badge badge-primary" style="margin-left: 8px;">
-                            <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right: 2px;">
-                                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"></path>
-                            </svg>
-                            ${task.comments.length}
-                        </span>
-                    `;
-                }
-                
-                // Renderizar informações de tempo real se aplicável
+                if (isCompleted) statusIcon = `<span class="badge badge-success">Concluída</span>`;
+                else if (isInProgress) statusIcon = `<span class="badge badge-primary">Em andamento</span>`;
+
+                let recurrentIcon = (task.recurrent || task.parentTaskId) ? `
+                    <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-left: 8px; color: #6a3093;">
+                        <path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"></path>
+                    </svg>` : '';
+
+                let commentsIndicator = (task.comments && task.comments.length > 0) ? `
+                    <span class="badge badge-primary" style="margin-left: 8px;">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right: 2px;">
+                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"></path>
+                        </svg> ${task.comments.length}
+                    </span>` : '';
+
                 let realTimeInfo = '';
                 if (task.realStartTime && task.realEndTime) {
-                    const realStart = new Date(task.realStartTime);
-                    const realEnd = new Date(task.realEndTime);
-                    
-                    const startStr = `${realStart.getHours().toString().padStart(2, '0')}:${realStart.getMinutes().toString().padStart(2, '0')}`;
-                    const endStr = `${realEnd.getHours().toString().padStart(2, '0')}:${realEnd.getMinutes().toString().padStart(2, '0')}`;
-                    
-                    realTimeInfo = `
-                        <div class="real-time-info" style="font-size: 0.8rem; color: #666; margin-top: 5px;">
-                            <svg class="icon icon-sm" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 2px;">
-                                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path>
-                            </svg>
-                            Executado: ${startStr} - ${endStr}
-                        </div>
-                    `;
+                    const realStart = task.realStartTime instanceof Date ? task.realStartTime : new Date(task.realStartTime);
+                    const realEnd = task.realEndTime instanceof Date ? task.realEndTime : new Date(task.realEndTime);
+                    if (!isNaN(realStart.getTime()) && !isNaN(realEnd.getTime())) {
+                         realTimeInfo = `
+                            <div class="real-time-info" style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                                <svg class="icon icon-sm" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 2px;">
+                                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path>
+                                </svg>
+                                Executado: ${formatTime(realStart.toTimeString())} - ${formatTime(realEnd.toTimeString())}
+                            </div>`;
+                    }
                 }
-                
-                // Construir HTML da tarefa
+
                 taskEl.innerHTML = `
                     <div class="task-header">
                         <div class="task-time">${formatTime(task.startTime)} - ${formatTime(task.endTime)}</div>
                         <h3 class="task-title">${task.title} ${recurrentIcon}</h3>
-                        ${statusIcon}
-                        ${commentsIndicator}
+                        ${statusIcon} ${commentsIndicator}
                     </div>
                     ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
                     ${realTimeInfo}
                     <div class="task-actions">
                         <div class="task-action-buttons">
-                            ${!isPastDate && !isCompleted ? `
-                                ${!isInProgress ? `
-                                    <button class="btn btn-secondary btn-sm start-task-btn">
-                                        <svg class="icon icon-sm btn-icon" viewBox="0 0 24 24">
-                                            <path d="M8 5v14l11-7z"></path>
-                                        </svg>
-                                        Iniciar
-                                    </button>
-                                ` : `
-                                    <button class="btn btn-success btn-sm finish-task-btn">
-                                        <svg class="icon icon-sm btn-icon" viewBox="0 0 24 24">
-                                            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path>
-                                        </svg>
-                                        Finalizar
-                                    </button>
-                                `}
+                            ${!isTaskPast && !isCompleted ? `
+                                ${!isInProgress ? `<button class="btn btn-secondary btn-sm start-task-btn"><svg class="icon icon-sm btn-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>Iniciar</button>` : ''}
+                                ${isInProgress ? `<button class="btn btn-success btn-sm finish-task-btn"><svg class="icon icon-sm btn-icon" viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>Finalizar</button>` : ''}
                             ` : ''}
-                            
-                            <button class="btn btn-secondary btn-sm comments-btn">
-                                <svg class="icon icon-sm btn-icon" viewBox="0 0 24 24">
-                                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"></path>
-                                </svg>
-                                Comentários
-                            </button>
+                            <button class="btn btn-secondary btn-sm comments-btn"><svg class="icon icon-sm btn-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"></path></svg>Comentários</button>
                         </div>
-                        
                         <div class="task-management">
-                            ${!isPastDate && !isInProgress && !isCompleted ? `
-                                <button class="btn btn-secondary btn-sm edit-task-btn">
-                                    <svg class="icon icon-sm" viewBox="0 0 24 24">
-                                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
-                                    </svg>
-                                </button>
-                                <button class="btn btn-danger btn-sm delete-task-btn">
-                                    <svg class="icon icon-sm" viewBox="0 0 24 24">
-                                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path>
-                                    </svg>
-                                </button>
+                            ${!isTaskPast && !isInProgress && !isCompleted ? `
+                                <button class="btn btn-secondary btn-sm edit-task-btn"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg></button>
+                                <button class="btn btn-danger btn-sm delete-task-btn"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg></button>
                             ` : ''}
-                            
-                            ${isCompleted ? `
-                                <div class="task-status-buttons">
-                                    <button class="btn btn-success btn-sm task-ok-btn">OK</button>
-                                    <button class="btn btn-danger btn-sm task-nok-btn">NOK</button>
-                                </div>
-                            ` : ''}
+                            ${isCompleted ? `<div class="task-status-buttons"><button class="btn btn-success btn-sm task-ok-btn">OK</button><button class="btn btn-danger btn-sm task-nok-btn">NOK</button></div>` : ''}
                         </div>
                     </div>
                 `;
-                
-                // Adicionar event listeners
-                taskEl.querySelector('.comments-btn')?.addEventListener('click', () => {
-                    openCommentsModal(task.id);
-                });
-                
-                taskEl.querySelector('.start-task-btn')?.addEventListener('click', () => {
-                    startTask(task.id);
-                });
-                
-                taskEl.querySelector('.finish-task-btn')?.addEventListener('click', () => {
-                    finishTask(task.id);
-                });
-                
-                taskEl.querySelector('.edit-task-btn')?.addEventListener('click', () => {
-                    openTaskModal(task.id);
-                });
-                
-                taskEl.querySelector('.delete-task-btn')?.addEventListener('click', () => {
-                    if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
-                        deleteTask(task.id);
-                    }
-                });
-                
-                taskEl.querySelector('.task-ok-btn')?.addEventListener('click', () => {
-                    markTaskStatus(task.id, 'ok');
-                });
-                
-                taskEl.querySelector('.task-nok-btn')?.addEventListener('click', () => {
-                    markTaskStatus(task.id, 'nok');
-                });
-                
+
+                taskEl.querySelector('.comments-btn')?.addEventListener('click', () => openCommentsModal(task.id));
+                taskEl.querySelector('.start-task-btn')?.addEventListener('click', () => startTask(task.id));
+                taskEl.querySelector('.finish-task-btn')?.addEventListener('click', () => finishTask(task.id));
+                taskEl.querySelector('.edit-task-btn')?.addEventListener('click', () => openTaskModal(task.id));
+                taskEl.querySelector('.delete-task-btn')?.addEventListener('click', () => deleteTask(task.id)); // Não precisa de confirmação aqui, já está em deleteTask
+                taskEl.querySelector('.task-ok-btn')?.addEventListener('click', () => markTaskStatus(task.id, 'ok'));
+                taskEl.querySelector('.task-nok-btn')?.addEventListener('click', () => markTaskStatus(task.id, 'nok'));
+
                 tasksContainer.appendChild(taskEl);
             });
         }
-        
+
         function renderWeekView() {
             weekViewContainer.innerHTML = '';
-            
-            // Calcular o primeiro dia da semana (domingo)
             const firstDayOfWeek = new Date(currentDate);
-            const currentDayOfWeek = currentDate.getDay(); // 0 = domingo, 6 = sábado
-            firstDayOfWeek.setDate(currentDate.getDate() - currentDayOfWeek);
-            
-            // Criar elementos para cada dia da semana
+            firstDayOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+
             for (let i = 0; i < 7; i++) {
                 const date = new Date(firstDayOfWeek);
                 date.setDate(firstDayOfWeek.getDate() + i);
-                
                 const dateStr = formatDate(date);
-                const isCurrentDate = date.getDate() === currentDate.getDate() && 
-                                       date.getMonth() === currentDate.getMonth() && 
-                                       date.getFullYear() === currentDate.getFullYear();
-                
-                // Filtrar tarefas para este dia
-                const dayTasks = tasks.filter(task => formatDate(task.date) === dateStr);
-                
-                // Ordenar tarefas por horário de início
+                const isCurrentDateView = date.getDate() === currentDate.getDate() && date.getMonth() === currentDate.getMonth() && date.getFullYear() === currentDate.getFullYear();
+
+                const dayTasks = tasks.filter(task => task.date && formatDate(task.date) === dateStr);
                 dayTasks.sort((a, b) => a.startTime.localeCompare(b.startTime));
-                
-                // Criar elemento do dia
+
                 const dayEl = document.createElement('div');
                 dayEl.className = 'week-day';
-                
-                if (isCurrentDate) {
+                if (isCurrentDateView) {
                     dayEl.style.borderColor = '#6a3093';
                     dayEl.style.borderWidth = '2px';
                 }
-                
-                // Cabeçalho do dia
-                const headerEl = document.createElement('div');
-                headerEl.className = 'week-day-header';
-                headerEl.innerHTML = `
-                    <div class="day-name">${shortDayNames[i]}</div>
-                    <div class="day-date">${date.getDate()}/${date.getMonth() + 1}</div>
+
+                dayEl.innerHTML = `
+                    <div class="week-day-header">
+                        <div class="day-name">${shortDayNames[i]}</div>
+                        <div class="day-date">${date.getDate()}/${date.getMonth() + 1}</div>
+                    </div>
+                    <div class="day-tasks">
+                        ${dayTasks.length === 0 ? '<div class="week-task" style="color: #999; text-align: center;">Sem tarefas</div>' :
+                        dayTasks.map(task => `
+                            <div class="week-task priority-${task.priority}" data-task-id="${task.id}">
+                                <div class="week-task-time">${formatTime(task.startTime)}</div>
+                                <div class="week-task-title">${task.title}</div>
+                            </div>
+                        `).join('')}
+                    </div>
                 `;
-                
-                // Container de tarefas
-                const tasksEl = document.createElement('div');
-                tasksEl.className = 'day-tasks';
-                
-                // Adicionar tarefas
-                if (dayTasks.length === 0) {
-                    tasksEl.innerHTML = '<div class="week-task" style="color: #999; text-align: center;">Sem tarefas</div>';
-                } else {
-                    dayTasks.forEach(task => {
-                        const taskEl = document.createElement('div');
-                        taskEl.className = `week-task priority-${task.priority}`;
-                        taskEl.innerHTML = `
-                            <div class="week-task-time">${formatTime(task.startTime)}</div>
-                            <div class="week-task-title">${task.title}</div>
-                        `;
-                        
-                        // Adicionar evento para navegar para o dia ao clicar na tarefa
-                        taskEl.addEventListener('click', () => {
-                            currentDate = new Date(date);
-                            updateDateDisplay();
-                            renderTasks();
-                            
-                            // Mudar para a aba Agenda
-                            document.querySelector('.nav-tab[data-tab="agenda"]').click();
-                        });
-                        
-                        tasksEl.appendChild(taskEl);
+
+                dayEl.querySelectorAll('.week-task').forEach(taskEl => {
+                    taskEl.addEventListener('click', () => {
+                        currentDate = new Date(date); // Navegar para o dia clicado
+                        updateDateDisplay();
+                        renderTasks();
+                        document.querySelector('.nav-tab[data-tab="agenda"]').click(); // Mudar para aba Agenda
                     });
-                }
-                
-                // Montar o elemento do dia
-                dayEl.appendChild(headerEl);
-                dayEl.appendChild(tasksEl);
+                });
                 weekViewContainer.appendChild(dayEl);
             }
         }
-        
+
         function updateStatistics() {
-            // Calcular início e fim da semana atual
             const today = new Date();
             const startOfWeek = new Date(today);
-            startOfWeek.setDate(today.getDate() - today.getDay()); // Domingo
+            startOfWeek.setDate(today.getDate() - today.getDay());
             startOfWeek.setHours(0, 0, 0, 0);
-            
             const endOfWeek = new Date(startOfWeek);
-            endOfWeek.setDate(startOfWeek.getDate() + 6); // Sábado
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
             endOfWeek.setHours(23, 59, 59, 999);
-            
-            // Filtrar tarefas da semana atual
+
             const weekTasks = tasks.filter(task => {
-                const taskDate = new Date(task.date);
+                if (!task.date) return false;
+                const taskDate = task.date instanceof Date ? task.date : new Date(task.date);
                 return taskDate >= startOfWeek && taskDate <= endOfWeek;
             });
-            
-            // Calcular estatísticas
-            const totalTasks = weekTasks.length;
-            const completedTasks = weekTasks.filter(task => 
-                task.status === 'completed' || task.status === 'ok' || task.status === 'nok'
-            ).length;
-            
-            const tasksWithRealTime = weekTasks.filter(task => 
-                task.realStartTime && task.realEndTime
-            );
-            
-            // Verificar pontualidade
-            let onTimeTasks = 0;
+
+            const totalWeekTasks = weekTasks.length;
+            const completedWeekTasks = weekTasks.filter(t => t.status === 'completed' || t.status === 'ok' || t.status === 'nok').length;
+
+            tasksCompletedEl.textContent = completedWeekTasks;
+            tasksCompletedRatioEl.textContent = `concluídas de ${totalWeekTasks} tarefas`;
+
+            const tasksWithRealTime = weekTasks.filter(t => t.realStartTime && t.realEndTime);
+            let onTimeTasksCount = 0; // Renomeado para evitar conflito
             tasksWithRealTime.forEach(task => {
                 const plannedStart = new Date(`${formatDate(task.date)}T${task.startTime}`);
-                const plannedEnd = new Date(`${formatDate(task.date)}T${task.endTime}`);
-                const realStart = new Date(task.realStartTime);
-                const realEnd = new Date(task.realEndTime);
-                
-                // Considerar pontual se começou até 5 minutos depois do planejado
-                // e terminou antes ou até 10 minutos depois do planejado
-                const startDiff = (realStart - plannedStart) / (1000 * 60); // diferença em minutos
-                const endDiff = (realEnd - plannedEnd) / (1000 * 60);
-                
-                if (startDiff <= 5 && endDiff <= 10) {
-                    onTimeTasks++;
+                const realStart = task.realStartTime instanceof Date ? task.realStartTime : new Date(task.realStartTime);
+                if (!isNaN(plannedStart.getTime()) && !isNaN(realStart.getTime())) {
+                    if (realStart <= plannedStart) onTimeTasksCount++; // Simplificado: considera pontual se começou no horário ou antes
                 }
             });
-            
-            // Calcular distribuição por prioridade
-            const criticalTasks = weekTasks.filter(task => task.priority === 'critical').length;
-            const attentionTasks = weekTasks.filter(task => task.priority === 'attention').length;
-            const normalTasks = weekTasks.filter(task => task.priority === 'normal').length;
-            
-            // Calcular percentuais
-            const criticalPercent = totalTasks > 0 ? Math.round((criticalTasks / totalTasks) * 100) : 0;
-            const attentionPercent = totalTasks > 0 ? Math.round((attentionTasks / totalTasks) * 100) : 0;
-            const normalPercent = totalTasks > 0 ? Math.round((normalTasks / totalTasks) * 100) : 0;
-            
-            // Atualizar elementos da UI
-            tasksCompletedEl.textContent = completedTasks;
-            tasksCompletedRatioEl.textContent = `concluídas de ${totalTasks} tarefas`;
-            
-            tasksOnTimeEl.textContent = onTimeTasks;
+            tasksOnTimeEl.textContent = onTimeTasksCount;
             tasksOnTimeRatioEl.textContent = `no horário de ${tasksWithRealTime.length} executadas`;
-            
-            priorityCriticalPercentEl.textContent = `${criticalPercent}%`;
-            priorityAttentionPercentEl.textContent = `${attentionPercent}%`;
-            priorityNormalPercentEl.textContent = `${normalPercent}%`;
+
+            const priorityCounts = weekTasks.reduce((acc, task) => {
+                acc[task.priority] = (acc[task.priority] || 0) + 1;
+                return acc;
+            }, { critical: 0, attention: 0, normal: 0 });
+
+            priorityCriticalPercentEl.textContent = totalWeekTasks > 0 ? `${Math.round((priorityCounts.critical / totalWeekTasks) * 100)}%` : '0%';
+            priorityAttentionPercentEl.textContent = totalWeekTasks > 0 ? `${Math.round((priorityCounts.attention / totalWeekTasks) * 100)}%` : '0%';
+            priorityNormalPercentEl.textContent = totalWeekTasks > 0 ? `${Math.round((priorityCounts.normal / totalWeekTasks) * 100)}%` : '0%';
         }
     </script>
 
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+      import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, where, Timestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBIsl6nEhaByJbdz4Jg0MDdImPgTygim2Q",
+        authDomain: "agenda-diaria-ada7f.firebaseapp.com",
+        projectId: "agenda-diaria-ada7f",
+        storageBucket: "agenda-diaria-ada7f.firebasestorage.app",
+        messagingSenderId: "221405263450",
+        appId: "1:221405263450:web:7e1b21df7fef5ef60dca63"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // Make db and firestore functions globally available for the existing script
+      window.db = db;
+      window.firebaseFirestore = {
+          collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, where, Timestamp
+      };
+    </script>
 </body>
 </html>
