@@ -2215,7 +2215,12 @@
             weekViewContainer.style.display = 'block';
             weekViewContainer.innerHTML = ''; // Limpar conteúdo anterior
 
+            const scrollWrapper = document.createElement('div');
+            scrollWrapper.style.overflowX = 'auto';
+            scrollWrapper.style.width = '100%';
+
             const table = document.createElement('table');
+            table.style.minWidth = '1200px'; // Aplicar min-width para evitar espremer colunas
             const thead = document.createElement('thead');
             const tbody = document.createElement('tbody');
 
@@ -2294,7 +2299,8 @@
             }
 
             table.appendChild(tbody);
-            weekViewContainer.appendChild(table);
+            scrollWrapper.appendChild(table); // Adicionar tabela ao wrapper
+            weekViewContainer.appendChild(scrollWrapper); // Adicionar wrapper ao container principal
         }
 
         function getTaskBlockStyle(task) { // Removido dayTasksContainerWidth
