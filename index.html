@@ -42,8 +42,72 @@
             text-align: center;
             font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            /* margin-bottom: 0.5rem; */ /* Removido para melhor alinhamento com o novo botão */
+            flex-grow: 1; /* Faz o título ocupar espaço, ajudando a empurrar o botão para a direita */
         }
+
+        .header-controls { /* Novo container para título e botão de configurações */
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Alinha título à esquerda e botões à direita */
+            padding: 0 1rem; /* Adiciona padding horizontal se necessário */
+            width: 100%;
+        }
+
+        .settings-btn {
+            background: none;
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+            margin-left: auto; /* Empurra o botão para a direita se o título não preencher */
+        }
+
+        .settings-btn:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .settings-dropdown {
+            position: absolute;
+            top: 50px; /* Ajustar conforme necessário */
+            right: 1rem;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 110;
+            width: 200px;
+            padding: 0.5rem 0;
+        }
+
+        .settings-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .settings-dropdown button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .settings-dropdown hr {
+            border: 0;
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 0.5rem 0;
+        }
+
 
         .date-nav {
             display: flex;
@@ -323,6 +387,14 @@
         .modal-footer .btn {
             margin-left: 0.5rem;
         }
+
+        /* Estilo para o modal de confirmação genérico */
+        #confirmationModal .modal-body {
+            padding: 1rem 0;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
 
         /* Comentários */
         .comments-section {
@@ -615,7 +687,21 @@
 <body>
     <!-- Cabeçalho do aplicativo -->
     <header class="app-header">
-        <h1 class="app-title">Agenda Diária</h1>
+        <div class="header-controls">
+            <h1 class="app-title">Agenda Diária</h1>
+            <button class="settings-btn" id="settingsBtn">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                </svg>
+            </button>
+            <div class="settings-dropdown hidden" id="settingsDropdown">
+                <button id="retention90days">Retenção: 90 dias</button>
+                <button id="retention180days">Retenção: 180 dias</button>
+                <button id="retentionDefault">Retenção: 30 dias (Padrão)</button>
+                <hr>
+                <button id="deleteAllDataBtn" style="color: #e74c3c;">Excluir Todos os Dados</button>
+            </div>
+        </div>
         <div class="date-nav">
             <button class="nav-btn" id="prevDay">
                 <svg class="icon" viewBox="0 0 24 24">
@@ -839,6 +925,23 @@
         </div>
     </div>
 
+    <!-- Modal de Confirmação Genérico -->
+    <div class="modal-overlay" id="confirmationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="confirmationModalTitle">Confirmar Ação</h3>
+                <button class="modal-close" id="closeConfirmationModal">&times;</button>
+            </div>
+            <div class="modal-body" id="confirmationModalBody">
+                Tem certeza que deseja prosseguir?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="confirmNoBtn">Não</button>
+                <button type="button" class="btn btn-primary" id="confirmYesBtn">Sim</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Constantes e Variáveis Globais
         const monthNames = [
@@ -891,6 +994,24 @@
         const navTabs = document.querySelectorAll('.nav-tab');
         const tabContents = document.querySelectorAll('.tab-content');
 
+        // Elementos de Configurações
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsDropdown = document.getElementById('settingsDropdown');
+        const retention90daysBtn = document.getElementById('retention90days');
+        const retention180daysBtn = document.getElementById('retention180days');
+        const retentionDefaultBtn = document.getElementById('retentionDefault');
+        const deleteAllDataBtn = document.getElementById('deleteAllDataBtn');
+
+        // Elementos do Modal de Confirmação
+        const confirmationModal = document.getElementById('confirmationModal');
+        const confirmationModalTitle = document.getElementById('confirmationModalTitle');
+        const confirmationModalBody = document.getElementById('confirmationModalBody');
+        const closeConfirmationModal = document.getElementById('closeConfirmationModal');
+        const confirmYesBtn = document.getElementById('confirmYesBtn');
+        const confirmNoBtn = document.getElementById('confirmNoBtn');
+        let currentConfirmCallback = null;
+
+
         // Estatísticas
         const tasksCompletedEl = document.getElementById('tasks-completed');
         const tasksCompletedRatioEl = document.getElementById('tasks-completed-ratio');
@@ -902,10 +1023,11 @@
 
         // Inicialização da Aplicação
         document.addEventListener('DOMContentLoaded', () => {
-            // loadTasks não é mais chamado diretamente aqui. Será chamado pelo listener do Firestore.
             updateDateDisplay();
             setupEventListeners();
-            setupFirestoreListener(); // Configurar o listener para atualizações em tempo real
+            updateRetentionDropdownUI(getDataRetentionDays()); // Atualizar UI do dropdown na carga
+            // A exclusão de dados antigos será chamada dentro de setupFirestoreListener após o primeiro carregamento.
+            setupFirestoreListener();
         });
 
         function setupFirestoreListener() {
@@ -950,10 +1072,52 @@
                 renderTasks();
                 renderWeekView();
                 updateStatistics();
+
+                // Chamar a exclusão de tarefas antigas após o primeiro carregamento/atualização
+                // Para evitar múltiplas chamadas desnecessárias, podemos adicionar um flag
+                if (!window.initialTasksLoaded) {
+                    deleteOldTasks();
+                    window.initialTasksLoaded = true;
+                }
+
             }, (error) => {
                 console.error("Erro no listener do Firestore: ", error);
             });
         }
+
+        async function deleteOldTasks() {
+            const { deleteDoc, doc } = window.firebaseFirestore;
+            const retentionDays = getDataRetentionDays();
+            const now = new Date();
+            const limitDate = new Date(now.setDate(now.getDate() - retentionDays));
+            limitDate.setHours(0, 0, 0, 0); // Comparar apenas a data
+
+            console.log(`Verificando tarefas para excluir anteriores a: ${limitDate.toLocaleDateString()}`);
+
+            const tasksToDelete = tasks.filter(task => {
+                if (!task.date) return false; // Ignorar tarefas sem data
+                const taskDate = task.date instanceof Date ? task.date : new Date(task.date);
+                return taskDate < limitDate;
+            });
+
+            if (tasksToDelete.length > 0) {
+                console.log(`Excluindo ${tasksToDelete.length} tarefas antigas...`);
+                // Usar Promise.all para aguardar todas as exclusões
+                try {
+                    await Promise.all(tasksToDelete.map(task => {
+                        console.log(`Excluindo tarefa: ${task.title} (ID: ${task.id}) de ${task.date.toLocaleDateString()}`);
+                        return deleteDoc(doc(window.db, "tasks", task.id));
+                    }));
+                    console.log(`${tasksToDelete.length} tarefas antigas excluídas com sucesso.`);
+                    await loadTasks(); // Recarregar tarefas para atualizar a UI
+                } catch (error) {
+                    console.error("Erro ao excluir tarefas antigas:", error);
+                }
+            } else {
+                console.log("Nenhuma tarefa antiga para excluir.");
+            }
+        }
+
 
         // Funções principais
         function setupEventListeners() {
@@ -1002,8 +1166,90 @@
             window.addEventListener('click', (e) => {
                 if (e.target === taskModal) taskModal.style.display = 'none';
                 if (e.target === commentsModal) commentsModal.style.display = 'none';
+                // Fechar dropdown de configurações se clicar fora
+                if (settingsDropdown && !settingsDropdown.classList.contains('hidden') && !settingsBtn.contains(e.target) && !settingsDropdown.contains(e.target)) {
+                    settingsDropdown.classList.add('hidden');
+                }
+            });
+
+            settingsBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Evitar que o window click listener feche imediatamente
+                settingsDropdown.classList.toggle('hidden');
+            });
+
+            // Event listeners para os botões do dropdown de configurações
+            retentionDefaultBtn.addEventListener('click', () => setDataRetention(30));
+            retention90daysBtn.addEventListener('click', () => setDataRetention(90));
+            retention180daysBtn.addEventListener('click', () => setDataRetention(180));
+            deleteAllDataBtn.addEventListener('click', () => confirmDeleteAllData());
+
+            // Event listeners do Modal de Confirmação
+            closeConfirmationModal.addEventListener('click', () => hideConfirmationModal());
+            confirmNoBtn.addEventListener('click', () => hideConfirmationModal());
+            confirmYesBtn.addEventListener('click', () => {
+                if (currentConfirmCallback) {
+                    currentConfirmCallback();
+                }
+                hideConfirmationModal();
+            });
+            confirmationModal.addEventListener('click', (e) => { // Fechar ao clicar no overlay
+                if (e.target === confirmationModal) {
+                    hideConfirmationModal();
+                }
             });
         }
+
+        function showConfirmationModal(message, callback, title = "Confirmar Ação") {
+            confirmationModalTitle.textContent = title;
+            confirmationModalBody.textContent = message;
+            currentConfirmCallback = callback;
+            confirmationModal.style.display = 'flex';
+            settingsDropdown.classList.add('hidden'); // Esconder dropdown de configurações
+        }
+
+        function hideConfirmationModal() {
+            confirmationModal.style.display = 'none';
+            currentConfirmCallback = null;
+        }
+
+        function setDataRetention(days) {
+            const message = `Deseja alterar o período de retenção de dados para ${days} dias? Tarefas mais antigas que ${days} dias serão excluídas na próxima vez que a página for carregada (ou ao definir esta opção).`;
+            showConfirmationModal(message, () => {
+                localStorage.setItem('dataRetentionDays', days.toString());
+                console.log(`Período de retenção de dados alterado para ${days} dias.`);
+                updateRetentionDropdownUI(days);
+                // Opcionalmente, chamar deleteOldTasks() aqui imediatamente ou apenas na próxima carga.
+                // Por enquanto, vamos manter a exclusão apenas no carregamento da página.
+                hideConfirmationModal(); // Garantir que o modal de confirmação seja fechado
+            }, "Confirmar Retenção de Dados");
+        }
+
+        function getDataRetentionDays() {
+            return parseInt(localStorage.getItem('dataRetentionDays') || '30', 10);
+        }
+
+        function updateRetentionDropdownUI(currentRetentionDays) {
+            // Remover destaque de todos
+            [retentionDefaultBtn, retention90daysBtn, retention180daysBtn].forEach(btn => {
+                btn.style.fontWeight = 'normal';
+                btn.style.backgroundColor = ''; // Limpar background
+            });
+
+            // Destacar o botão ativo
+            let activeBtn;
+            if (currentRetentionDays === 90) {
+                activeBtn = retention90daysBtn;
+            } else if (currentRetentionDays === 180) {
+                activeBtn = retention180daysBtn;
+            } else { // 30 dias ou padrão
+                activeBtn = retentionDefaultBtn;
+            }
+            if (activeBtn) {
+                activeBtn.style.fontWeight = 'bold';
+                activeBtn.style.backgroundColor = '#e0e0e0'; // Um leve destaque
+            }
+        }
+
 
         function updateDateDisplay() {
             const day = currentDate.getDate();
@@ -1321,6 +1567,47 @@
                 }
                 await loadTasks(); // Recarregar tarefas
             }
+        }
+
+        function confirmDeleteAllData() {
+            showConfirmationModal(
+                "Tem certeza que deseja excluir TODAS as tarefas? Esta ação não pode ser desfeita.",
+                async () => {
+                    console.log("Iniciando exclusão de todos os dados...");
+                    const { deleteDoc, doc, collection, getDocs } = window.firebaseFirestore;
+                    try {
+                        // É mais seguro buscar todos os documentos da coleção 'tasks' e depois deletá-los
+                        // do que depender apenas do array 'tasks' local, que pode não estar completo.
+                        const tasksCol = collection(window.db, "tasks");
+                        const taskSnapshot = await getDocs(tasksCol);
+
+                        if (taskSnapshot.empty) {
+                            console.log("Nenhuma tarefa encontrada para excluir.");
+                            alert("Nenhuma tarefa para excluir.");
+                            return;
+                        }
+
+                        const deletePromises = [];
+                        taskSnapshot.forEach(docSnapshot => {
+                            console.log(`Preparando para excluir tarefa ID: ${docSnapshot.id}`);
+                            deletePromises.push(deleteDoc(doc(window.db, "tasks", docSnapshot.id)));
+                        });
+
+                        await Promise.all(deletePromises);
+
+                        console.log("Todas as tarefas foram excluídas do Firestore.");
+                        localStorage.removeItem('dataRetentionDays'); // Opcional: resetar retenção
+                        updateRetentionDropdownUI(getDataRetentionDays()); // Atualizar UI
+                        await loadTasks(); // Recarregar para mostrar a lista vazia
+                        alert("Todos os dados foram excluídos com sucesso!");
+                    } catch (error) {
+                        console.error("Erro ao excluir todos os dados:", error);
+                        alert("Ocorreu um erro ao tentar excluir todos os dados.");
+                    }
+                    hideConfirmationModal();
+                },
+                "Confirmar Exclusão Total"
+            );
         }
 
         async function startTask(taskId) {
