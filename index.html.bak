@@ -1351,7 +1351,6 @@
             }
         }
 
-        /* Removida função markTaskStatus, pois os botões OK/NOK foram removidos.
         async function markTaskStatus(taskId, newStatus) { // Renomeado 'status' para 'newStatus' para evitar conflito
             const { updateDoc, doc } = window.firebaseFirestore;
             const taskDocRef = doc(window.db, "tasks", taskId);
@@ -1364,7 +1363,6 @@
                 console.error("Erro ao marcar status da tarefa:", error);
             }
         }
-        */
 
         // Manipulação de Comentários com Firestore
         function openCommentsModal(taskId) {
@@ -1499,25 +1497,11 @@
                 taskEl.dataset.id = task.id; // ID do Firestore
 
                 const isTaskPast = isPast(task.date); // task.date deve ser um objeto Date
-                const taskDateObject = task.date instanceof Date ? task.date : new Date(task.date); // Garantir que é Date
                 const isInProgress = task.status === 'in-progress';
                 const isCompleted = task.status === 'completed';
-                const isNotCompleted = task.status === 'not-completed'; // Novo estado
-
-                // Lógica de visibilidade para Editar/Deletar
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const taskDateOnly = new Date(taskDateObject);
-                taskDateOnly.setHours(0,0,0,0);
-
-                const deadline = new Date(taskDateOnly);
-                deadline.setDate(taskDateOnly.getDate() - 1);
-
-                const canEditOrDelete = today <= deadline && !isInProgress && !isCompleted && !isNotCompleted;
 
                 let statusIcon = '';
-                if (isCompleted) statusIcon = `<span class="badge badge-success">Finalizada</span>`;
-                else if (isNotCompleted) statusIcon = `<span class="badge badge-warning">Não Concluída</span>`;
+                if (isCompleted) statusIcon = `<span class="badge badge-success">Concluída</span>`;
                 else if (isInProgress) statusIcon = `<span class="badge badge-primary">Em andamento</span>`;
 
                 let recurrentIcon = (task.recurrent || task.parentTaskId) ? `
@@ -1557,21 +1541,18 @@
                     ${realTimeInfo}
                     <div class="task-actions">
                         <div class="task-action-buttons">
-                            ${!isTaskPast && !isCompleted && !isNotCompleted ? `
+                            ${!isTaskPast && !isCompleted ? `
                                 ${!isInProgress ? `<button class="btn btn-secondary btn-sm start-task-btn"><svg class="icon icon-sm btn-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>Iniciar</button>` : ''}
-                                ${isInProgress ? `
-                                    <button class="btn btn-success btn-sm finish-task-btn"><svg class="icon icon-sm btn-icon" viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>Finalizar</button>
-                                    <button class="btn btn-warning btn-sm not-completed-task-btn" style="margin-left: 5px;"><svg class="icon icon-sm btn-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z"/></svg>Não Concluído</button>
-                                ` : ''}
+                                ${isInProgress ? `<button class="btn btn-success btn-sm finish-task-btn"><svg class="icon icon-sm btn-icon" viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>Finalizar</button>` : ''}
                             ` : ''}
                             <button class="btn btn-secondary btn-sm comments-btn"><svg class="icon icon-sm btn-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"></path></svg>Comentários</button>
                         </div>
                         <div class="task-management">
-                            ${canEditOrDelete ? `
+                            ${!isTaskPast && !isInProgress && !isCompleted ? `
                                 <button class="btn btn-secondary btn-sm edit-task-btn"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg></button>
                                 <button class="btn btn-danger btn-sm delete-task-btn"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg></button>
                             ` : ''}
-                            ${'' /* Removido: ${isCompleted ? `<div class="task-status-buttons"><button class="btn btn-success btn-sm task-ok-btn">OK</button><button class="btn btn-danger btn-sm task-nok-btn">NOK</button></div>` : ''} */}
+                            ${isCompleted ? `<div class="task-status-buttons"><button class="btn btn-success btn-sm task-ok-btn">OK</button><button class="btn btn-danger btn-sm task-nok-btn">NOK</button></div>` : ''}
                         </div>
                     </div>
                 `;
@@ -1579,26 +1560,13 @@
                 taskEl.querySelector('.comments-btn')?.addEventListener('click', () => openCommentsModal(task.id));
                 taskEl.querySelector('.start-task-btn')?.addEventListener('click', () => startTask(task.id));
                 taskEl.querySelector('.finish-task-btn')?.addEventListener('click', () => finishTask(task.id));
-                taskEl.querySelector('.not-completed-task-btn')?.addEventListener('click', () => markTaskNotCompleted(task.id));
                 taskEl.querySelector('.edit-task-btn')?.addEventListener('click', () => openTaskModal(task.id));
-                taskEl.querySelector('.delete-task-btn')?.addEventListener('click', () => deleteTask(task.id));
+                taskEl.querySelector('.delete-task-btn')?.addEventListener('click', () => deleteTask(task.id)); // Não precisa de confirmação aqui, já está em deleteTask
+                taskEl.querySelector('.task-ok-btn')?.addEventListener('click', () => markTaskStatus(task.id, 'ok'));
+                taskEl.querySelector('.task-nok-btn')?.addEventListener('click', () => markTaskStatus(task.id, 'nok'));
 
                 tasksContainer.appendChild(taskEl);
             });
-        }
-
-        async function markTaskNotCompleted(taskId) {
-            const { updateDoc, doc, Timestamp } = window.firebaseFirestore;
-            const taskDocRef = doc(window.db, "tasks", taskId);
-            try {
-                await updateDoc(taskDocRef, {
-                    status: 'not-completed', // Novo status
-                    realEndTime: Timestamp.now() // Também registra o tempo de finalização
-                });
-                await loadTasks(); // Recarrega as tarefas
-            } catch (error) {
-                console.error("Erro ao marcar tarefa como não concluída:", error);
-            }
         }
 
         function renderWeekView() {
