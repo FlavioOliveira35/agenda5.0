@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Agenda Diária 5.0 - Planejamento Moderno</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/_@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
@@ -18,7 +19,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
@@ -65,7 +66,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s ease-in-out;
             margin-left: auto; /* Empurra o botão para a direita se o título não preencher */
         }
 
@@ -134,7 +135,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s ease-in-out;
         }
 
         .nav-btn:hover {
@@ -153,7 +154,7 @@
             text-align: center;
             padding: 1rem 0;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease-in-out;
             color: #666;
             font-weight: 500;
         }
@@ -186,17 +187,17 @@
 
         .task-item {
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border-radius: 8px; /* Mantido em 8px, já estava bom */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08); /* Sombra levemente ajustada */
             padding: 1rem;
             margin-bottom: 1rem;
             position: relative;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
 
         .task-item:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.12); /* Sombra no hover ajustada */
         }
 
         .task-header {
@@ -232,16 +233,16 @@
         }
 
         /* Prioridades */
-        .priority-critical {
-            border-left: 4px solid #e74c3c;
+        .priority-critical { /* Roxo */
+            border-left: 4px solid #6A1B9A;
         }
 
-        .priority-attention {
-            border-left: 4px solid #f39c12;
+        .priority-attention { /* Azul */
+            border-left: 4px solid #3F51B5;
         }
 
-        .priority-normal {
-            border-left: 4px solid #2ecc71;
+        .priority-normal { /* Verde */
+            border-left: 4px solid #4CAF50;
         }
 
         /* Botões */
@@ -251,7 +252,7 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 0.9rem;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -319,11 +320,11 @@
 
         .modal {
             background-color: white;
-            border-radius: 8px;
+            border-radius: 8px; /* Mantido em 8px */
             width: 90%;
             max-width: 500px;
             padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 7px rgba(0,0,0,0.12); /* Sombra refinada */
         }
 
         .modal-header {
@@ -487,9 +488,9 @@
 
         .week-day {
             background-color: white;
-            border-radius: 8px;
+            border-radius: 8px; /* Mantido */
             padding: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.07); /* Sombra refinada */
         }
 
         .week-day-header {
@@ -517,16 +518,16 @@
             border-left: 3px solid #ddd;
         }
 
-        .week-task.priority-critical {
-            background-color: rgba(231, 76, 60, 0.1);
+        .week-task.priority-critical { /* Roxo Claro */
+            background-color: rgba(106, 27, 154, 0.1);
         }
 
-        .week-task.priority-attention {
-            background-color: rgba(243, 156, 18, 0.1);
+        .week-task.priority-attention { /* Azul Claro */
+            background-color: rgba(63, 81, 181, 0.1);
         }
 
-        .week-task.priority-normal {
-            background-color: rgba(46, 204, 113, 0.1);
+        .week-task.priority-normal { /* Verde Claro */
+            background-color: rgba(76, 175, 80, 0.1);
         }
 
         /* Estilos para Visualização Horizontal (Tabela) */
@@ -565,9 +566,15 @@
             font-size: 0.8rem;
             border-left: 3px solid #ccc; /* Cor padrão */
         }
-        .week-view-horizontal .horizontal-task-item.priority-critical { border-left-color: #e74c3c; background-color: rgba(231, 76, 60, 0.05); }
-        .week-view-horizontal .horizontal-task-item.priority-attention { border-left-color: #f39c12; background-color: rgba(243, 156, 18, 0.05); }
-        .week-view-horizontal .horizontal-task-item.priority-normal { border-left-color: #2ecc71; background-color: rgba(46, 204, 113, 0.05); }
+        /* Cores para visualização horizontal - blocos de tarefa (cor sólida) e itens (borda + bg claro) */
+        .week-view-horizontal .horizontal-task-item.priority-critical { border-left-color: #6A1B9A; background-color: rgba(106, 27, 154, 0.05); }
+        .week-view-horizontal .horizontal-task-item.priority-attention { border-left-color: #3F51B5; background-color: rgba(63, 81, 181, 0.05); }
+        .week-view-horizontal .horizontal-task-item.priority-normal { border-left-color: #4CAF50; background-color: rgba(76, 175, 80, 0.05); }
+
+        .week-view-horizontal .task-block.priority-critical { background-color: #6A1B9A; }
+        .week-view-horizontal .task-block.priority-attention { background-color: #3F51B5; }
+        .week-view-horizontal .task-block.priority-normal { background-color: #4CAF50; }
+
         .week-view-horizontal .task-time-horizontal {
             font-weight: bold;
             margin-right: 5px;
@@ -600,26 +607,27 @@
             top: 2px; /* Pequeno espaço do topo da célula, pode ser ajustado para sobreposição */
             background-color: #a29bfe; /* Cor padrão do bloco */
             color: white;
-            border-radius: 4px; /* Bordas mais arredondadas */
-            padding: 0px 8px; /* Ajustado para melhor aparência com line-height */
-            font-size: 0.75em; /* Aumentado para legibilidade */
+            border-radius: 6px; /* Ajustado para blocos menores */
+            padding: 0px 8px;
+            font-size: 0.75em;
             font-weight: 500;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
             box-sizing: border-box;
-            border: 1px solid rgba(0,0,0,0.2); /* Borda um pouco mais escura */
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Sombra sutil */
-            z-index: 5; /* Para sobrepor linhas de grade e outros elementos */
+            border: 1px solid rgba(0,0,0,0.15);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Sombra um pouco mais pronunciada */
+            z-index: 5;
             cursor: pointer;
+            transition: opacity 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
         .week-view-horizontal .task-block:hover {
             opacity: 0.85;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra mais pronunciada no hover */
         }
-        .week-view-horizontal .task-block.priority-critical { background-color: #e74c3c; }
-        .week-view-horizontal .task-block.priority-attention { background-color: #f39c12; }
-        .week-view-horizontal .task-block.priority-normal { background-color: #2ecc71; }
+        .week-view-horizontal .task-block.priority-critical { background-color: #6A1B9A; /* Roxo */ }
+        .week-view-horizontal .task-block.priority-attention { background-color: #3F51B5; /* Azul */ }
+        .week-view-horizontal .task-block.priority-normal { background-color: #4CAF50; /* Verde */ }
 
 
         /* Relatórios */
@@ -632,9 +640,9 @@
 
         .stat-card {
             background-color: white;
-            border-radius: 8px;
+            border-radius: 8px; /* Mantido */
             padding: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.07); /* Sombra refinada */
         }
 
         .stat-title {
@@ -651,9 +659,9 @@
 
         .chart-container {
             background-color: white;
-            border-radius: 8px;
+            border-radius: 8px; /* Mantido */
             padding: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.07); /* Sombra refinada */
             margin-bottom: 1rem;
         }
 
@@ -672,7 +680,7 @@
             justify-content: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease-in-out;
             border: none;
             font-size: 1.5rem;
         }
@@ -680,7 +688,7 @@
         .floating-btn:hover {
             background-color: #8a4baf;
             transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Sombra no hover ajustada */
         }
 
         /* Alertas e notificações */
