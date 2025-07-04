@@ -188,8 +188,8 @@
 
         .task-item {
             background-color: white;
-            border-radius: 8px; /* Mantido em 8px, já estava bom */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08); /* Sombra levemente ajustada */
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.06); /* Sombra refinada */
             padding: 1rem;
             margin-bottom: 1rem;
             position: relative;
@@ -197,8 +197,8 @@
         }
 
         .task-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.12); /* Sombra no hover ajustada */
+            transform: translateY(-3px) scale(1.01); /* Efeito de elevação e leve aumento */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1); /* Sombra mais pronunciada no hover */
         }
 
         .task-header {
@@ -325,7 +325,7 @@
             width: 90%;
             max-width: 500px;
             padding: 1.5rem;
-            box-shadow: 0 3px 7px rgba(0,0,0,0.12); /* Sombra refinada */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15); /* Sombra mais pronunciada para modais */
         }
 
         .modal-header {
@@ -489,9 +489,9 @@
 
         .week-day {
             background-color: white;
-            border-radius: 8px; /* Mantido */
+            border-radius: 8px;
             padding: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.07); /* Sombra refinada */
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05); /* Sombra sutil */
         }
 
         .week-day-header {
@@ -628,14 +628,19 @@
             /* A cor de fundo virá da classe de status */
         }
         /* Cores de STATUS para os blocos na visualização horizontal */
-        .week-view-horizontal .task-block.status-pending { background-color: #B0BEC5; /* Cinza claro */ }
+        .week-view-horizontal .task-block.status-pending {
+            background-color: #FFEE58; /* Amarelo Suave */
+            border: 2px solid white;
+            color: #424242; /* Texto escuro para contraste com amarelo */
+        }
         .week-view-horizontal .task-block.status-in-progress { background-color: #4CAF50; /* Verde */ }
         .week-view-horizontal .task-block.status-completed { background-color: #3F51B5; /* Azul */ }
         .week-view-horizontal .task-block.status-not-completed { background-color: #FF9800; /* Laranja */ }
         /* Remover a borda lateral baseada em prioridade para .task-block, pois a cor de fundo já indica status */
-        .week-view-horizontal .task-block {
-            border-left: none !important; /* Remover borda de prioridade, manter borda geral */
-        }
+        /* A borda geral já está definida em .task-block, a borda branca para pending irá sobrescrevê-la seletivamente. */
+        /* .week-view-horizontal .task-block {
+            border-left: none !important;
+        } */
 
 
         /* Relatórios */
@@ -648,9 +653,9 @@
 
         .stat-card {
             background-color: white;
-            border-radius: 8px; /* Mantido */
+            border-radius: 8px;
             padding: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.07); /* Sombra refinada */
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05); /* Sombra sutil */
         }
 
         .stat-title {
@@ -667,9 +672,9 @@
 
         .chart-container {
             background-color: white;
-            border-radius: 8px; /* Mantido */
+            border-radius: 8px;
             padding: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.07); /* Sombra refinada */
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05); /* Sombra sutil */
             margin-bottom: 1rem;
         }
 
